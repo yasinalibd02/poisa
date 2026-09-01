@@ -1,0 +1,451 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../app/routes.dart';
+import '../../../../core/constants/app_config.dart';
+import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/constants/currencies.dart';
+import '../../../../core/extensions/context_x.dart';
+import '../../../../core/services/link_service.dart';
+import '../../../../core/utils/app_failure.dart';
+import '../../../../core/widgets/app_dialogs.dart';
+import '../../../auth/data/user_model.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../auth/presentation/providers/user_providers.dart';
+import '../../data/app_settings.dart';
+import '../providers/settings_actions.dart';
+import '../providers/settings_provider.dart';
+import '../widgets/settings_tiles.dart';
+
+/// Profile, preferences, data export and the two account-level destructive
+/// actions.
+class SettingsScreen extends ConsumerStatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _busy = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppSettings settings = ref.watch(settingsProvider);
+    final UserModel? user = ref.watch(userDocProvider).valueOrNull;
+
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(title: Text(context.l10n.settings)),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(
+          AppSizes.screenPadding,
+          0,
+          AppSizes.screenPadding,
+          96,
+        ),
+        children: <Widget>[
+          _ProfileHeader(user: user),
+
+          SettingsSection(
+            title: context.l10n.preferences,
+            children: <Widget>[
+              SettingsTile(
+                icon: Icons.translate_rounded,
+                label: context.l10n.language,
+                value: settings.isBangla ? 'বাংলা' : 'English',
+                onTap: _pickLanguage,
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.pin_rounded,
+                label: context.l10n.banglaNumerals,
+                description: context.l10n.banglaNumeralsBody,
+                trailing: Switch.adaptive(
+                  value: settings.useBanglaNumerals,
+                  onChanged: ref
+                      .read(settingsProvider.notifier)
+                      .setBanglaNumerals,
+                ),
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.brightness_6_rounded,
+                label: context.l10n.theme,
+                value: _themeLabel(settings.themeMode),
+                onTap: _pickTheme,
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.payments_rounded,
+                label: context.l10n.currency,
+                value:
+                    '${settings.currencySymbol}  ${settings.currencyCode}',
+                onTap: _pickCurrency,
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.calendar_view_week_rounded,
+                label: context.l10n.firstDayOfWeek,
+                value: _weekdayLabel(settings.firstDayOfWeek),
+                onTap: _pickFirstDayOfWeek,
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.event_repeat_rounded,
+                label: context.l10n.firstDayOfMonth,
+                description: context.l10n.firstDayOfMonthBody,
+                value: context.l10n.dayOfMonth(settings.firstDayOfMonth),
+                onTap: _pickFirstDayOfMonth,
+              ),
+            ],
+          ),
+
+          SettingsSection(
+            title: context.l10n.dataAndPrivacy,
+            children: <Widget>[
+              SettingsTile(
+                icon: Icons.category_rounded,
+                label: context.l10n.manageCategories,
+                onTap: () => context.push(AppRoutes.categories),
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.account_balance_wallet_rounded,
+                label: context.l10n.manageAccounts,
+                onTap: () => context.push(AppRoutes.accounts),
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.flag_rounded,
+                label: context.l10n.budgets,
+                onTap: () => context.push(AppRoutes.budget),
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.download_rounded,
+                label: context.l10n.exportCsv,
+                onTap: _busy ? null : _exportCsv,
+                trailing: _busy
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : null,
+              ),
+            ],
+          ),
+
+          SettingsSection(
+            title: context.l10n.about,
+            children: <Widget>[
+              SettingsTile(
+                icon: Icons.info_outline_rounded,
+                label: context.l10n.about,
+                description: context.l10n.aboutBody,
+                value: context.l10n.version(AppConfig.appVersion),
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.privacy_tip_outlined,
+                label: context.l10n.privacyPolicy,
+                onTap: () => LinkService.open(AppConfig.privacyPolicyUrl),
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.star_outline_rounded,
+                label: context.l10n.rateApp,
+                onTap: () => LinkService.open(
+                  LinkService.storeUrl(
+                    androidUrl: AppConfig.androidStoreUrl,
+                    iosUrl: AppConfig.iosStoreUrl,
+                  ),
+                ),
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.ios_share_rounded,
+                label: context.l10n.shareApp,
+                onTap: _shareApp,
+              ),
+            ],
+          ),
+
+          AppSizes.gapXl,
+          SettingsSection(
+            title: context.l10n.profile,
+            children: <Widget>[
+              SettingsTile(
+                icon: Icons.logout_rounded,
+                label: context.l10n.signOut,
+                onTap: _signOut,
+              ),
+              const SettingsDivider(),
+              SettingsTile(
+                icon: Icons.delete_forever_rounded,
+                label: context.l10n.deleteAccountAndData,
+                destructive: true,
+                onTap: _busy ? null : _deleteAccount,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _themeLabel(ThemeMode mode) => switch (mode) {
+    ThemeMode.light => context.l10n.themeLight,
+    ThemeMode.dark => context.l10n.themeDark,
+    ThemeMode.system => context.l10n.themeSystem,
+  };
+
+  String _weekdayLabel(int weekday) => switch (weekday) {
+    DateTime.saturday => context.l10n.saturday,
+    DateTime.sunday => context.l10n.sunday,
+    _ => context.l10n.monday,
+  };
+
+  Future<void> _pickLanguage() async {
+    final String? code = await showChoiceSheet<String>(
+      context,
+      title: context.l10n.language,
+      selected: ref.read(settingsProvider).languageCode,
+      options: const <({String value, String label, String? subtitle})>[
+        (value: 'en', label: 'English', subtitle: 'English'),
+        (value: 'bn', label: 'বাংলা', subtitle: 'Bangla'),
+      ],
+    );
+    if (code != null) {
+      await ref.read(settingsProvider.notifier).setLanguage(code);
+    }
+  }
+
+  Future<void> _pickTheme() async {
+    final ThemeMode? mode = await showChoiceSheet<ThemeMode>(
+      context,
+      title: context.l10n.theme,
+      selected: ref.read(settingsProvider).themeMode,
+      options: <({ThemeMode value, String label, String? subtitle})>[
+        (
+          value: ThemeMode.system,
+          label: context.l10n.themeSystem,
+          subtitle: null,
+        ),
+        (
+          value: ThemeMode.light,
+          label: context.l10n.themeLight,
+          subtitle: null,
+        ),
+        (value: ThemeMode.dark, label: context.l10n.themeDark, subtitle: null),
+      ],
+    );
+    if (mode != null) {
+      await ref.read(settingsProvider.notifier).setThemeMode(mode);
+    }
+  }
+
+  Future<void> _pickCurrency() async {
+    final String? code = await showChoiceSheet<String>(
+      context,
+      title: context.l10n.selectCurrency,
+      searchable: true,
+      searchHint: context.l10n.actionSearch,
+      selected: ref.read(settingsProvider).currencyCode,
+      options: Currencies.all
+          .map(
+            (CurrencyOption c) => (
+              value: c.code,
+              label: '${c.symbol}  ${c.code}',
+              subtitle: c.name,
+            ),
+          )
+          .toList(growable: false),
+    );
+    if (code != null) {
+      await ref.read(settingsProvider.notifier).setCurrency(code);
+    }
+  }
+
+  Future<void> _pickFirstDayOfWeek() async {
+    final int? weekday = await showChoiceSheet<int>(
+      context,
+      title: context.l10n.firstDayOfWeek,
+      selected: ref.read(settingsProvider).firstDayOfWeek,
+      options: <({int value, String label, String? subtitle})>[
+        (value: DateTime.monday, label: context.l10n.monday, subtitle: null),
+        (
+          value: DateTime.saturday,
+          label: context.l10n.saturday,
+          subtitle: null,
+        ),
+        (value: DateTime.sunday, label: context.l10n.sunday, subtitle: null),
+      ],
+    );
+    if (weekday != null) {
+      await ref.read(settingsProvider.notifier).setFirstDayOfWeek(weekday);
+    }
+  }
+
+  Future<void> _pickFirstDayOfMonth() async {
+    final int? day = await showChoiceSheet<int>(
+      context,
+      title: context.l10n.firstDayOfMonth,
+      selected: ref.read(settingsProvider).firstDayOfMonth,
+      options: <({int value, String label, String? subtitle})>[
+        // Capped at 28 so no month is ever skipped in February.
+        for (int day = 1; day <= 28; day++)
+          (
+            value: day,
+            label: context.l10n.dayOfMonth(day),
+            subtitle: null,
+          ),
+      ],
+    );
+    if (day != null) {
+      await ref.read(settingsProvider.notifier).setFirstDayOfMonth(day);
+    }
+  }
+
+  Future<void> _exportCsv() async {
+    setState(() => _busy = true);
+    try {
+      final String? csv = await ref
+          .read(settingsActionsProvider)
+          .buildExportCsv();
+      if (!mounted) return;
+
+      if (csv == null) {
+        AppSnack.show(context, context.l10n.nothingToExport);
+        return;
+      }
+
+      await ref
+          .read(csvExportServiceProvider)
+          .share(csv: csv, subject: context.l10n.exportCsv);
+      if (!mounted) return;
+      AppSnack.success(context, context.l10n.exportSuccess);
+    } catch (error) {
+      if (!mounted) return;
+      AppSnack.error(
+        context,
+        AppFailure.from(error).localizedMessage(context.l10n),
+      );
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _shareApp() async {
+    try {
+      await ref
+          .read(csvExportServiceProvider)
+          .shareText(
+            '${context.l10n.shareAppMessage}\n${AppConfig.androidStoreUrl}',
+          );
+    } catch (_) {
+      // Share sheet failures are not worth interrupting the user for.
+    }
+  }
+
+  Future<void> _signOut() async {
+    final bool confirmed = await showConfirmDialog(
+      context,
+      title: context.l10n.signOutTitle,
+      message: context.l10n.signOutBody,
+      confirmLabel: context.l10n.signOut,
+      destructive: false,
+    );
+    if (!confirmed) return;
+    await ref.read(signInControllerProvider.notifier).signOut();
+  }
+
+  /// Two confirmations: a plain dialog, then a typed "DELETE".
+  Future<void> _deleteAccount() async {
+    final bool first = await showConfirmDialog(
+      context,
+      title: context.l10n.deleteAccountStep1Title,
+      message: context.l10n.deleteAccountStep1Body,
+      confirmLabel: context.l10n.actionDelete,
+    );
+    if (!first || !mounted) return;
+
+    final bool second = await showTypedConfirmDialog(
+      context,
+      title: context.l10n.deleteAccountStep2Title,
+      message: context.l10n.deleteAccountStep2Body,
+      requiredWord: context.l10n.deleteConfirmationWord,
+      confirmLabel: context.l10n.deleteAccountAndData,
+    );
+    if (!second || !mounted) return;
+
+    setState(() => _busy = true);
+    try {
+      await ref.read(settingsActionsProvider).deleteAccountAndData();
+      if (!mounted) return;
+      AppSnack.success(context, context.l10n.deleteAccountDone);
+    } catch (error) {
+      if (!mounted) return;
+      final AppFailure failure = AppFailure.from(error);
+      AppSnack.error(context, failure.localizedMessage(context.l10n));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+}
+
+class _ProfileHeader extends StatelessWidget {
+  const _ProfileHeader({required this.user});
+
+  final UserModel? user;
+
+  @override
+  Widget build(BuildContext context) {
+    final String? photo = user?.photoUrl;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.lg),
+      child: Row(
+        children: <Widget>[
+          CircleAvatar(
+            radius: 30,
+            backgroundColor: context.colors.primary.withValues(alpha: 0.14),
+            foregroundImage: (photo != null && photo.isNotEmpty)
+                ? NetworkImage(photo)
+                : null,
+            child: Text(
+              user?.initials ?? '',
+              style: context.texts.titleMedium?.copyWith(
+                color: context.colors.primary,
+              ),
+            ),
+          ),
+          AppSizes.hGapLg,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  user?.displayName.trim().isNotEmpty ?? false
+                      ? user!.displayName
+                      : context.l10n.profile,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.texts.titleMedium,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  user?.email ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.texts.bodySmall,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

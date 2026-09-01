@@ -1,0 +1,75 @@
+name: kori
+description: "Kori — simple money tracking. সহজ হিসাব।"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # --- Firebase ---
+  firebase_core: 4.14.0
+  firebase_auth: 6.6.1
+  cloud_firestore: 6.9.0
+  google_sign_in: 7.2.0
+
+  # --- State & routing ---
+  flutter_riverpod: 2.6.1
+  go_router: 16.3.0
+
+  # --- Local storage & formatting ---
+  shared_preferences: 2.5.5
+  intl: 0.20.2
+
+  # --- UI ---
+  fl_chart: 1.2.0
+  cupertino_icons: 1.0.8
+
+  # --- Links (privacy policy, store listing) ---
+  url_launcher: 6.3.2
+
+  # --- CSV export / sharing ---
+  path_provider: 2.1.6
+  share_plus: 11.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: 6.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    # Latin / English UI
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-400.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-500.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-600.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-700.ttf
+          weight: 700
+    # Bengali UI
+    - family: HindSiliguri
+      fonts:
+        - asset: assets/fonts/HindSiliguri-400.ttf
+          weight: 400
+        - asset: assets/fonts/HindSiliguri-500.ttf
+          weight: 500
+        - asset: assets/fonts/HindSiliguri-600.ttf
+          weight: 600
+        - asset: assets/fonts/HindSiliguri-700.ttf
+          weight: 700

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Adaptive-icon background: the teal coin/leaf gradient, full bleed. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path android:pathData="M0,0h108v108h-108z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="0"
+                android:startY="0"
+                android:endX="108"
+                android:endY="108">
+                <item android:offset="0" android:color="#3FA98F" />
+                <item android:offset="1" android:color="#14624F" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Leaf notch lifted out of the top-right corner. -->
+    <path
+        android:pathData="M110,-2m-36,0a36,36 0 1,0 72,0a36,36 0 1,0 -72,0z"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.16" />
+
+    <!-- Leaf vein. -->
+    <path
+        android:pathData="M80,28 Q95,17 104,4"
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.34"
+        android:strokeWidth="3.8"
+        android:strokeLineCap="round" />
+</vector>

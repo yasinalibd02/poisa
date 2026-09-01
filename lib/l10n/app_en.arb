@@ -1,0 +1,368 @@
+{
+  "@@locale": "en",
+  "appName": "Kori",
+  "tagline": "Simple money tracking.",
+  "actionSave": "Save",
+  "actionDelete": "Delete",
+  "actionEdit": "Edit",
+  "actionCancel": "Cancel",
+  "actionConfirm": "Confirm",
+  "actionAdd": "Add",
+  "actionClose": "Close",
+  "actionRetry": "Retry",
+  "actionDone": "Done",
+  "actionNext": "Next",
+  "actionSkip": "Skip",
+  "actionSearch": "Search",
+  "actionApply": "Apply",
+  "actionReset": "Reset",
+  "actionUndo": "Undo",
+  "actionRemove": "Remove",
+  "actionSeeAll": "See all",
+  "actionYes": "Yes",
+  "actionNo": "No",
+  "actionOk": "OK",
+  "labelOptional": "Optional",
+  "labelAll": "All",
+  "labelTotal": "Total",
+  "income": "Income",
+  "expense": "Expense",
+  "transfer": "Transfer",
+  "balance": "Balance",
+  "category": "Category",
+  "categories": "Categories",
+  "account": "Account",
+  "accounts": "Accounts",
+  "budget": "Budget",
+  "budgets": "Budgets",
+  "report": "Report",
+  "reports": "Reports",
+  "settings": "Settings",
+  "dashboard": "Dashboard",
+  "transactions": "Transactions",
+  "home": "Home",
+  "amount": "Amount",
+  "date": "Date",
+  "time": "Time",
+  "note": "Note",
+  "net": "Net",
+  "onboard1Title": "Track every taka you spend.",
+  "onboard1Body": "Record income and expenses in seconds, even without an internet connection.",
+  "onboard2Title": "Set budgets, stay in control.",
+  "onboard2Body": "Give every category a monthly limit and see exactly where you stand.",
+  "onboard3Title": "Clear charts and reports.",
+  "onboard3Body": "Understand your habits with simple, honest visuals.",
+  "chooseLanguage": "Choose your language",
+  "chooseLanguageBody": "You can change this any time in Settings.",
+  "languageEnglish": "English",
+  "languageBangla": "Bangla",
+  "getStarted": "Get Started",
+  "loginHeadline": "Welcome to Kori",
+  "loginSubtext": "Sign in to keep your records safe and synced across your devices.",
+  "continueWithGoogle": "Continue with Google",
+  "signingIn": "Signing in…",
+  "signInFailed": "Sign-in failed. Please try again.",
+  "signInCancelled": "Sign-in was cancelled.",
+  "legalPrefix": "By continuing you agree to our",
+  "termsOfService": "Terms of Service",
+  "and": "and",
+  "privacyPolicy": "Privacy Policy",
+  "legalSuffix": "",
+  "@legalSuffix": {
+    "description": "Trailing text after the terms/privacy links; empty in English."
+  },
+  "greetingMorning": "Good morning, {name}",
+  "@greetingMorning": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "greetingAfternoon": "Good afternoon, {name}",
+  "@greetingAfternoon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "greetingEvening": "Good evening, {name}",
+  "@greetingEvening": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalBalance": "Total Balance",
+  "netWorth": "Net worth",
+  "spendingByCategory": "Spending by category",
+  "recentTransactions": "Recent transactions",
+  "noTransactionsTitle": "No transactions yet",
+  "noTransactionsBody": "Tap the + button to record your first income or expense.",
+  "addTransaction": "Add transaction",
+  "editTransaction": "Edit transaction",
+  "selectCategory": "Select a category",
+  "selectAccount": "Select an account",
+  "fromAccount": "From",
+  "toAccount": "To",
+  "notePlaceholder": "What was this for?",
+  "errorAmountRequired": "Enter an amount greater than zero.",
+  "errorCategoryRequired": "Please choose a category.",
+  "errorAccountRequired": "Please choose an account.",
+  "errorSameAccount": "Choose two different accounts for a transfer.",
+  "transactionSaved": "Transaction saved",
+  "transactionDeleted": "Transaction deleted",
+  "deleteTransactionTitle": "Delete this transaction?",
+  "deleteTransactionBody": "This cannot be undone once the snackbar disappears.",
+  "filters": "Filters",
+  "searchHint": "Search notes or categories",
+  "dateRange": "Date range",
+  "amountRange": "Amount range",
+  "minAmount": "Min",
+  "maxAmount": "Max",
+  "type": "Type",
+  "noResultsTitle": "Nothing found",
+  "noResultsBody": "Try changing your filters or search words.",
+  "selectedCount": "{count} selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteSelectedTitle": "Delete {count} transactions?",
+  "@deleteSelectedTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteSelectedBody": "The selected transactions will be permanently removed.",
+  "filtersActive": "{count} filters active",
+  "@filtersActive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "manageCategories": "Manage categories",
+  "newCategory": "New category",
+  "editCategory": "Edit category",
+  "categoryNameEn": "Name (English)",
+  "categoryNameBn": "Name (Bangla)",
+  "icon": "Icon",
+  "color": "Color",
+  "errorNameRequired": "Please enter a name.",
+  "categorySaved": "Category saved",
+  "categoryDeleted": "Category deleted",
+  "deleteCategoryTitle": "Delete this category?",
+  "deleteCategoryBody": "{name} will be removed permanently. This cannot be undone.",
+  "@deleteCategoryBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryInUseTitle": "Category is in use",
+  "categoryInUseBody": "{count} transactions use this category. Move them to another category to delete it.",
+  "@categoryInUseBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "moveTransactionsTo": "Move transactions to",
+  "moveAndDelete": "Move and delete",
+  "defaultCannotDelete": "Default categories can be edited but not deleted.",
+  "dragToReorder": "Press and hold to reorder",
+  "noCategoriesTitle": "No categories here",
+  "noCategoriesBody": "Add one to start organising your money.",
+  "manageAccounts": "Manage accounts",
+  "newAccount": "New account",
+  "editAccount": "Edit account",
+  "accountName": "Account name",
+  "accountType": "Account type",
+  "openingBalance": "Opening balance",
+  "accountTypeCash": "Cash",
+  "accountTypeBank": "Bank",
+  "accountTypeCard": "Card",
+  "accountTypeMobileWallet": "Mobile wallet",
+  "accountTypeSavings": "Savings",
+  "accountSaved": "Account saved",
+  "accountDeleted": "Account deleted",
+  "deleteAccountTitle": "Delete this account?",
+  "deleteAccountBody": "{name} will be removed permanently. This cannot be undone.",
+  "@deleteAccountBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noAccountsTitle": "No accounts yet",
+  "noAccountsBody": "Add a wallet, bank or card to start tracking balances.",
+  "accountInUseTitle": "Account is in use",
+  "accountInUseBody": "{count} transactions use this account. Move them to another account to delete it.",
+  "@accountInUseBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "moveTransactionsToAccount": "Move transactions to",
+  "lastAccountCannotDelete": "You need at least one account.",
+  "archived": "Archived",
+  "archive": "Archive",
+  "unarchive": "Unarchive",
+  "showArchived": "Show archived",
+  "newBudget": "New budget",
+  "editBudget": "Edit budget",
+  "budgetLimit": "Monthly limit",
+  "overallBudget": "Overall monthly budget",
+  "overallBudgetShort": "Overall",
+  "spentOfLimit": "{spent} of {limit}",
+  "@spentOfLimit": {
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "remaining": "{amount} left",
+  "@remaining": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "overBudgetBy": "{amount} over",
+  "@overBudgetBy": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "daysLeft": "{count, plural, =1{1 day left} other{{count} days left}}",
+  "@daysLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "copyLastMonth": "Copy last month",
+  "budgetsCopied": "{count, plural, =0{No budgets to copy} =1{1 budget copied} other{{count} budgets copied}}",
+  "@budgetsCopied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noBudgetsTitle": "No budgets for this month",
+  "noBudgetsBody": "Set a limit for a category and Kori will track it for you.",
+  "budgetSaved": "Budget saved",
+  "budgetDeleted": "Budget deleted",
+  "deleteBudgetTitle": "Delete this budget?",
+  "deleteBudgetBody": "The limit is removed. Your transactions are not affected.",
+  "errorLimitRequired": "Enter a limit greater than zero.",
+  "errorBudgetExists": "A budget already exists for this category.",
+  "periodWeek": "Week",
+  "periodMonth": "Month",
+  "periodYear": "Year",
+  "periodCustom": "Custom",
+  "expenseBreakdown": "Expense breakdown",
+  "incomeBreakdown": "Income breakdown",
+  "incomeVsExpense": "Income vs expense",
+  "dailyTrend": "Daily trend",
+  "categoryRanking": "By category",
+  "transactionCount": "{count, plural, =1{1 transaction} other{{count} transactions}}",
+  "@transactionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noDataForPeriod": "No data for this period",
+  "noDataForPeriodBody": "Pick another period or add a transaction.",
+  "lastSixMonths": "Last 6 months",
+  "profile": "Profile",
+  "preferences": "Preferences",
+  "dataAndPrivacy": "Data",
+  "about": "About",
+  "language": "Language",
+  "banglaNumerals": "Bangla numerals",
+  "banglaNumeralsBody": "Show numbers as ১২৩৪ instead of 1234.",
+  "theme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "currency": "Currency",
+  "selectCurrency": "Select currency",
+  "firstDayOfWeek": "First day of week",
+  "firstDayOfMonth": "First day of month",
+  "firstDayOfMonthBody": "Useful if your salary cycle does not start on the 1st.",
+  "dayOfMonth": "Day {day}",
+  "@dayOfMonth": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "exportCsv": "Export data to CSV",
+  "exportingCsv": "Preparing your file…",
+  "exportSuccess": "Export ready",
+  "exportFailed": "Could not export your data.",
+  "nothingToExport": "There is nothing to export yet.",
+  "rateApp": "Rate this app",
+  "shareApp": "Share Kori",
+  "shareAppMessage": "I track my money with Kori — simple, bilingual and free.",
+  "aboutBody": "Kori is a simple, offline-friendly money tracker for everyday use.",
+  "version": "Version {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "signOut": "Sign out",
+  "signOutTitle": "Sign out of Kori?",
+  "signOutBody": "Your data stays safe and will be here when you sign back in.",
+  "deleteAccountAndData": "Delete account and all data",
+  "deleteAccountStep1Title": "Delete your account?",
+  "deleteAccountStep1Body": "Every transaction, category, account and budget will be permanently erased. This cannot be undone.",
+  "deleteAccountStep2Title": "Are you absolutely sure?",
+  "deleteAccountStep2Body": "Type DELETE below to confirm.",
+  "deleteConfirmationWord": "DELETE",
+  "deleteAccountDone": "Your account and data have been deleted.",
+  "reauthRequired": "For your security, please sign in again before deleting your account.",
+  "monday": "Monday",
+  "saturday": "Saturday",
+  "sunday": "Sunday",
+  "errorTitle": "Something went wrong",
+  "errorBody": "We could not load this. Please try again.",
+  "errorPermissionDenied": "You do not have permission to do that.",
+  "offlineBanner": "You are offline — showing saved data",
+  "loading": "Loading…",
+  "unknownCategory": "Uncategorised",
+  "unknownAccount": "Unknown account",
+  "thisMonth": "This month",
+  "today": "Today",
+  "yesterday": "Yesterday"
+}

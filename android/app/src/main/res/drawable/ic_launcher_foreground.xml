@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Adaptive-icon foreground: the "K", sized to sit inside the 66dp safe zone
+     so no launcher mask can clip it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:pathData="M40,37 L40,71"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="7.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M68,37 L41.6,54"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="7.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M41.6,54 L68,71"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="7.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

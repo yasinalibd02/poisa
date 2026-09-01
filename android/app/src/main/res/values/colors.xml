@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matches AppColors.backgroundLight, so the native launch screen hands
+         over to the Flutter splash with no colour flash. -->
+    <color name="kori_launch_background">#F5F7F6</color>
+</resources>

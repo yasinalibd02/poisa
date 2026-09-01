@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "kori (debug)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define=GOOGLE_SERVER_CLIENT_ID=495721871472-0jelm3tqr6nuqheuomgobveutgrk2a7k.apps.googleusercontent.com"
+      ]
+    },
+    {
+      "name": "kori (profile)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "toolArgs": [
+        "--dart-define=GOOGLE_SERVER_CLIENT_ID=495721871472-0jelm3tqr6nuqheuomgobveutgrk2a7k.apps.googleusercontent.com"
+      ]
+    },
+    {
+      "name": "kori (release)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "toolArgs": [
+        "--dart-define=GOOGLE_SERVER_CLIENT_ID=495721871472-0jelm3tqr6nuqheuomgobveutgrk2a7k.apps.googleusercontent.com"
+      ]
+    }
+  ]
+}
