@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appName": "Kori",
+  "appName": "Poisa",
   "tagline": "Simple money tracking.",
   "actionSave": "Save",
   "actionDelete": "Delete",
@@ -57,7 +57,7 @@
   "languageEnglish": "English",
   "languageBangla": "Bangla",
   "getStarted": "Get Started",
-  "loginHeadline": "Welcome to Kori",
+  "loginHeadline": "Welcome to Poisa",
   "loginSubtext": "Sign in to keep your records safe and synced across your devices.",
   "continueWithGoogle": "Continue with Google",
   "signingIn": "Signing in…",
@@ -273,7 +273,7 @@
     }
   },
   "noBudgetsTitle": "No budgets for this month",
-  "noBudgetsBody": "Set a limit for a category and Kori will track it for you.",
+  "noBudgetsBody": "Set a limit for a category and Poisa will track it for you.",
   "budgetSaved": "Budget saved",
   "budgetDeleted": "Budget deleted",
   "deleteBudgetTitle": "Delete this budget?",
@@ -330,9 +330,9 @@
   "exportFailed": "Could not export your data.",
   "nothingToExport": "There is nothing to export yet.",
   "rateApp": "Rate this app",
-  "shareApp": "Share Kori",
-  "shareAppMessage": "I track my money with Kori — simple, bilingual and free.",
-  "aboutBody": "Kori is a simple, offline-friendly money tracker for everyday use.",
+  "shareApp": "Share Poisa",
+  "shareAppMessage": "I track my money with Poisa — simple, bilingual and free.",
+  "aboutBody": "Poisa is a simple, offline-friendly money tracker for everyday use.",
   "version": "Version {version}",
   "@version": {
     "placeholders": {
@@ -342,7 +342,7 @@
     }
   },
   "signOut": "Sign out",
-  "signOutTitle": "Sign out of Kori?",
+  "signOutTitle": "Sign out of Poisa?",
   "signOutBody": "Your data stays safe and will be here when you sign back in.",
   "deleteAccountAndData": "Delete account and all data",
   "deleteAccountStep1Title": "Delete your account?",

@@ -9,7 +9,7 @@ class AppL10nEn extends AppL10n {
   AppL10nEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Kori';
+  String get appName => 'Poisa';
 
   @override
   String get tagline => 'Simple money tracking.';
@@ -183,7 +183,7 @@ class AppL10nEn extends AppL10n {
   String get getStarted => 'Get Started';
 
   @override
-  String get loginHeadline => 'Welcome to Kori';
+  String get loginHeadline => 'Welcome to Poisa';
 
   @override
   String get loginSubtext =>
@@ -549,7 +549,7 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get noBudgetsBody =>
-      'Set a limit for a category and Kori will track it for you.';
+      'Set a limit for a category and Poisa will track it for you.';
 
   @override
   String get budgetSaved => 'Budget saved';
@@ -690,15 +690,15 @@ class AppL10nEn extends AppL10n {
   String get rateApp => 'Rate this app';
 
   @override
-  String get shareApp => 'Share Kori';
+  String get shareApp => 'Share Poisa';
 
   @override
   String get shareAppMessage =>
-      'I track my money with Kori — simple, bilingual and free.';
+      'I track my money with Poisa — simple, bilingual and free.';
 
   @override
   String get aboutBody =>
-      'Kori is a simple, offline-friendly money tracker for everyday use.';
+      'Poisa is a simple, offline-friendly money tracker for everyday use.';
 
   @override
   String version(String version) {
@@ -709,7 +709,7 @@ class AppL10nEn extends AppL10n {
   String get signOut => 'Sign out';
 
   @override
-  String get signOutTitle => 'Sign out of Kori?';
+  String get signOutTitle => 'Sign out of Poisa?';
 
   @override
   String get signOutBody =>

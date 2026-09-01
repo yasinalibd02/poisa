@@ -100,7 +100,7 @@ abstract class AppL10n {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Kori'**
+  /// **'Poisa'**
   String get appName;
 
   /// No description provided for @tagline.
@@ -442,7 +442,7 @@ abstract class AppL10n {
   /// No description provided for @loginHeadline.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Kori'**
+  /// **'Welcome to Poisa'**
   String get loginHeadline;
 
   /// No description provided for @loginSubtext.
@@ -1072,7 +1072,7 @@ abstract class AppL10n {
   /// No description provided for @noBudgetsBody.
   ///
   /// In en, this message translates to:
-  /// **'Set a limit for a category and Kori will track it for you.'**
+  /// **'Set a limit for a category and Poisa will track it for you.'**
   String get noBudgetsBody;
 
   /// No description provided for @budgetSaved.
@@ -1330,19 +1330,19 @@ abstract class AppL10n {
   /// No description provided for @shareApp.
   ///
   /// In en, this message translates to:
-  /// **'Share Kori'**
+  /// **'Share Poisa'**
   String get shareApp;
 
   /// No description provided for @shareAppMessage.
   ///
   /// In en, this message translates to:
-  /// **'I track my money with Kori — simple, bilingual and free.'**
+  /// **'I track my money with Poisa — simple, bilingual and free.'**
   String get shareAppMessage;
 
   /// No description provided for @aboutBody.
   ///
   /// In en, this message translates to:
-  /// **'Kori is a simple, offline-friendly money tracker for everyday use.'**
+  /// **'Poisa is a simple, offline-friendly money tracker for everyday use.'**
   String get aboutBody;
 
   /// No description provided for @version.
@@ -1360,7 +1360,7 @@ abstract class AppL10n {
   /// No description provided for @signOutTitle.
   ///
   /// In en, this message translates to:
-  /// **'Sign out of Kori?'**
+  /// **'Sign out of Poisa?'**
   String get signOutTitle;
 
   /// No description provided for @signOutBody.

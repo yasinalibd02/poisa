@@ -50,3 +50,8 @@ app.*.map.json
 # overwrites it with your project's values.
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
+
+# Release signing. Losing this keystore means you can never publish an
+# update to the same Play Store listing again — back it up outside git.
+android/keystore/
+android/key.properties

@@ -9,7 +9,7 @@ class AppL10nBn extends AppL10n {
   AppL10nBn([String locale = 'bn']) : super(locale);
 
   @override
-  String get appName => 'কড়ি';
+  String get appName => 'পয়সা';
 
   @override
   String get tagline => 'সহজ হিসাব।';
@@ -182,7 +182,7 @@ class AppL10nBn extends AppL10n {
   String get getStarted => 'শুরু করুন';
 
   @override
-  String get loginHeadline => 'কড়িতে স্বাগতম';
+  String get loginHeadline => 'পয়সাতে স্বাগতম';
 
   @override
   String get loginSubtext =>
@@ -545,7 +545,7 @@ class AppL10nBn extends AppL10n {
 
   @override
   String get noBudgetsBody =>
-      'একটি ক্যাটাগরির সীমা ঠিক করুন, কড়ি হিসাব রাখবে।';
+      'একটি ক্যাটাগরির সীমা ঠিক করুন, পয়সা হিসাব রাখবে।';
 
   @override
   String get budgetSaved => 'বাজেট সংরক্ষণ হয়েছে';
@@ -687,15 +687,15 @@ class AppL10nBn extends AppL10n {
   String get rateApp => 'অ্যাপটি রেট করুন';
 
   @override
-  String get shareApp => 'কড়ি শেয়ার করুন';
+  String get shareApp => 'পয়সা শেয়ার করুন';
 
   @override
   String get shareAppMessage =>
-      'আমি কড়ি দিয়ে হিসাব রাখি — সহজ, দুই ভাষায় আর বিনামূল্যে।';
+      'আমি পয়সা দিয়ে হিসাব রাখি — সহজ, দুই ভাষায় আর বিনামূল্যে।';
 
   @override
   String get aboutBody =>
-      'কড়ি প্রতিদিনের ব্যবহারের জন্য একটি সহজ, ইন্টারনেট ছাড়াও চলে এমন হিসাব রাখার অ্যাপ।';
+      'পয়সা প্রতিদিনের ব্যবহারের জন্য একটি সহজ, ইন্টারনেট ছাড়াও চলে এমন হিসাব রাখার অ্যাপ।';
 
   @override
   String version(String version) {
@@ -706,7 +706,7 @@ class AppL10nBn extends AppL10n {
   String get signOut => 'সাইন আউট';
 
   @override
-  String get signOutTitle => 'কড়ি থেকে সাইন আউট করবেন?';
+  String get signOutTitle => 'পয়সা থেকে সাইন আউট করবেন?';
 
   @override
   String get signOutBody =>
