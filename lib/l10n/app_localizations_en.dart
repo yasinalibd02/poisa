@@ -193,6 +193,29 @@ class AppL10nEn extends AppL10n {
   String get continueWithGoogle => 'Continue with Google';
 
   @override
+  String get continueAsGuest => 'Continue without an account';
+
+  @override
+  String get guestModeCaption =>
+      'Nothing is saved — your data is erased when you leave guest mode.';
+
+  @override
+  String get guestBadge => 'Guest';
+
+  @override
+  String get guestExit => 'Exit guest mode';
+
+  @override
+  String get guestExitTitle => 'Exit guest mode?';
+
+  @override
+  String get guestExitBody =>
+      'Everything you added as a guest will be permanently deleted.';
+
+  @override
+  String get guestExitDone => 'Guest data cleared.';
+
+  @override
   String get signingIn => 'Signing in…';
 
   @override
@@ -239,6 +262,15 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get spendingByCategory => 'Spending by category';
+
+  @override
+  String get spendingOverview => 'Spending Overview';
+
+  @override
+  String get totalExpense => 'Total Expense';
+
+  @override
+  String get othersCategory => 'Others';
 
   @override
   String get recentTransactions => 'Recent transactions';
@@ -589,7 +621,7 @@ class AppL10nEn extends AppL10n {
   String get incomeBreakdown => 'Income breakdown';
 
   @override
-  String get incomeVsExpense => 'Income vs expense';
+  String get incomeVsExpense => 'Income vs Expense';
 
   @override
   String get dailyTrend => 'Daily trend';
@@ -772,7 +804,10 @@ class AppL10nEn extends AppL10n {
   String get unknownAccount => 'Unknown account';
 
   @override
-  String get thisMonth => 'This month';
+  String get thisMonth => 'This Month';
+
+  @override
+  String get lastMonth => 'Last Month';
 
   @override
   String get today => 'Today';

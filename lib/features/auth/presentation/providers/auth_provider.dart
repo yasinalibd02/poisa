@@ -28,6 +28,12 @@ final Provider<String?> uidProvider = Provider<String?>(
   (Ref ref) => ref.watch(currentUserProvider)?.uid,
 );
 
+/// True when the current session is an anonymous "guest" one — used to swap
+/// in the "nothing is saved" copy and the "exit guest mode" action.
+final Provider<bool> isGuestProvider = Provider<bool>(
+  (Ref ref) => ref.watch(currentUserProvider)?.isAnonymous ?? false,
+);
+
 /// Drives the Login button: `loading` while the Google sheet is up, `error`
 /// when it failed for a reason worth telling the user about.
 final AsyncNotifierProvider<SignInController, void> signInControllerProvider =
@@ -52,6 +58,20 @@ class SignInController extends AsyncNotifier<void> {
         return false;
       }
       state = AsyncValue<void>.error(failure, stack);
+      return false;
+    }
+  }
+
+  /// Opens an anonymous session. Returns `true` once it is live so the caller
+  /// can route straight to the dashboard.
+  Future<bool> continueAsGuest() async {
+    state = const AsyncValue<void>.loading();
+    try {
+      await ref.read(authRepositoryProvider).continueAsGuest();
+      state = const AsyncValue<void>.data(null);
+      return true;
+    } catch (error, stack) {
+      state = AsyncValue<void>.error(AppFailure.from(error), stack);
       return false;
     }
   }

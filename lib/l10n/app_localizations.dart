@@ -457,6 +457,48 @@ abstract class AppL10n {
   /// **'Continue with Google'**
   String get continueWithGoogle;
 
+  /// No description provided for @continueAsGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without an account'**
+  String get continueAsGuest;
+
+  /// No description provided for @guestModeCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is saved — your data is erased when you leave guest mode.'**
+  String get guestModeCaption;
+
+  /// No description provided for @guestBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get guestBadge;
+
+  /// No description provided for @guestExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit guest mode'**
+  String get guestExit;
+
+  /// No description provided for @guestExitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit guest mode?'**
+  String get guestExitTitle;
+
+  /// No description provided for @guestExitBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you added as a guest will be permanently deleted.'**
+  String get guestExitBody;
+
+  /// No description provided for @guestExitDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest data cleared.'**
+  String get guestExitDone;
+
   /// No description provided for @signingIn.
   ///
   /// In en, this message translates to:
@@ -540,6 +582,24 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Spending by category'**
   String get spendingByCategory;
+
+  /// No description provided for @spendingOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending Overview'**
+  String get spendingOverview;
+
+  /// No description provided for @totalExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Expense'**
+  String get totalExpense;
+
+  /// No description provided for @othersCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Others'**
+  String get othersCategory;
 
   /// No description provided for @recentTransactions.
   ///
@@ -1150,7 +1210,7 @@ abstract class AppL10n {
   /// No description provided for @incomeVsExpense.
   ///
   /// In en, this message translates to:
-  /// **'Income vs expense'**
+  /// **'Income vs Expense'**
   String get incomeVsExpense;
 
   /// No description provided for @dailyTrend.
@@ -1480,8 +1540,14 @@ abstract class AppL10n {
   /// No description provided for @thisMonth.
   ///
   /// In en, this message translates to:
-  /// **'This month'**
+  /// **'This Month'**
   String get thisMonth;
+
+  /// No description provided for @lastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Month'**
+  String get lastMonth;
 
   /// No description provided for @today.
   ///

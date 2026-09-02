@@ -10,11 +10,9 @@ import '../../../../core/widgets/state_views.dart';
 import '../../../transactions/data/transaction_model.dart';
 import '../../../transactions/presentation/providers/transaction_providers.dart';
 import '../../../transactions/presentation/widgets/dismissible_transaction.dart';
-import '../widgets/account_cards.dart';
 import '../widgets/balance_card.dart';
-import '../widgets/budget_preview.dart';
 import '../widgets/dashboard_app_bar.dart';
-import '../widgets/month_selector.dart';
+import '../widgets/income_expense_card.dart';
 import '../widgets/spending_donut_card.dart';
 
 /// Home. Everything here is derived from the single ledger stream, so it is
@@ -68,16 +66,12 @@ class _DashboardBody extends ConsumerWidget {
         slivers: <Widget>[
           const SliverToBoxAdapter(child: DashboardAppBar()),
           const SliverToBoxAdapter(child: AppSizes.gapSm),
-          const SliverToBoxAdapter(child: MonthSelector()),
-          const SliverToBoxAdapter(child: AppSizes.gapLg),
           const SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: AppSizes.screenPadding),
             sliver: SliverToBoxAdapter(child: BalanceCard()),
           ),
-          const SliverToBoxAdapter(child: AppSizes.gapXl),
-          const SliverToBoxAdapter(child: AccountCardsRow()),
           const SliverToBoxAdapter(child: SpendingDonutCard()),
-          const SliverToBoxAdapter(child: BudgetPreview()),
+          const SliverToBoxAdapter(child: IncomeExpenseCard()),
 
           if (all.isEmpty)
             SliverFillRemaining(

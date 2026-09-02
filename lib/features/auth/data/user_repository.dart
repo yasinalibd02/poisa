@@ -30,8 +30,12 @@ class UserRepository {
   /// categories plus a single Cash account. Safe to call on every sign-in —
   /// an existing document is only refreshed with the latest Google profile.
   ///
-  /// Returns `true` when this call performed the seeding.
-  Future<bool> ensureUserDocument({
+  /// Returns `null` when this call just created the document — there is
+  /// nothing to hydrate from, since the values written *are* this device's
+  /// local settings. Returns the existing raw document map when the profile
+  /// already existed (a returning user, or a second device), so the caller
+  /// can hydrate its preferences from it without a second round trip.
+  Future<Map<String, Object?>?> ensureUserDocument({
     required User authUser,
     required AppSettings settings,
   }) async {
@@ -47,7 +51,7 @@ class UserRepository {
           'photoUrl': authUser.photoURL,
           'updatedAt': Timestamp.fromDate(now),
         }, SetOptions(merge: true),);
-        return false;
+        return snapshot.data();
       }
 
       final UserModel model = UserModel(
@@ -67,7 +71,7 @@ class UserRepository {
       batch.set(_refs.user, model.toMap());
       _addSeedWrites(batch, settings.languageCode, now);
       await batch.commit();
-      return true;
+      return null;
     } catch (error) {
       throw AppFailure.from(error);
     }

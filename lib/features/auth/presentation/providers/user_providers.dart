@@ -2,8 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/services/firestore_providers.dart';
+import '../../../accounts/presentation/providers/account_providers.dart';
+import '../../../budget/presentation/providers/budget_providers.dart';
+import '../../../categories/presentation/providers/category_providers.dart';
 import '../../../settings/data/app_settings.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
+import '../../../transactions/presentation/providers/transaction_providers.dart';
 import '../../data/user_model.dart';
 import '../../data/user_repository.dart';
 import 'auth_provider.dart';
@@ -32,18 +36,35 @@ final FutureProvider<void> userBootstrapProvider = FutureProvider<void>((
   final User? user = ref.watch(currentUserProvider);
   if (user == null) return;
 
+  // These streams are independent of the profile check below — reading them
+  // here starts their Firestore subscriptions immediately instead of only
+  // after this whole function resolves. Without this, Dashboard's first
+  // paint on a brand-new sign-in had to wait through the profile read, the
+  // seed-data write, AND then the accounts/categories/transactions streams
+  // starting from zero — four sequential round trips end to end, which on a
+  // real (non-cold-cache) connection was slow enough to look like a blank
+  // screen until the user navigated away and back, by which point the chain
+  // had finally finished in the background.
+  ref.read(accountsStreamProvider);
+  ref.read(categoriesStreamProvider);
+  ref.read(allTransactionsProvider);
+  ref.read(budgetsStreamProvider);
+
   final UserRepository repository = ref.watch(userRepositoryProvider);
   final AppSettings settings = ref.read(settingsProvider);
 
-  await repository.ensureUserDocument(authUser: user, settings: settings);
+  final Map<String, Object?>? existingProfile = await repository
+      .ensureUserDocument(authUser: user, settings: settings);
 
   // A returning user on a fresh device adopts the preferences stored with
-  // their profile, but only where this device has no local choice yet.
-  final UserModel? remote = await repository.watchUser().first;
-  if (remote != null) {
+  // their profile, but only where this device has no local choice yet. A
+  // brand-new profile has nothing to hydrate — the values it was written with
+  // *are* this device's local settings — so `existingProfile` is null and
+  // this is skipped, removing what used to be a second, redundant read.
+  if (existingProfile != null) {
     await ref
         .read(settingsProvider.notifier)
-        .hydrateFromRemote(remote.toMap());
+        .hydrateFromRemote(existingProfile);
   }
 });
 

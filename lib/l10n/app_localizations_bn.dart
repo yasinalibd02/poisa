@@ -192,6 +192,29 @@ class AppL10nBn extends AppL10n {
   String get continueWithGoogle => 'Google দিয়ে চালিয়ে যান';
 
   @override
+  String get continueAsGuest => 'অ্যাকাউন্ট ছাড়াই চালিয়ে যান';
+
+  @override
+  String get guestModeCaption =>
+      'কিছুই সংরক্ষিত হয় না — গেস্ট মোড থেকে বেরোলে আপনার তথ্য মুছে যাবে।';
+
+  @override
+  String get guestBadge => 'গেস্ট';
+
+  @override
+  String get guestExit => 'গেস্ট মোড থেকে বেরোন';
+
+  @override
+  String get guestExitTitle => 'গেস্ট মোড থেকে বেরোবেন?';
+
+  @override
+  String get guestExitBody =>
+      'গেস্ট হিসেবে যোগ করা সব কিছু স্থায়ীভাবে মুছে যাবে।';
+
+  @override
+  String get guestExitDone => 'গেস্ট তথ্য মুছে ফেলা হয়েছে।';
+
+  @override
   String get signingIn => 'সাইন ইন হচ্ছে…';
 
   @override
@@ -238,6 +261,15 @@ class AppL10nBn extends AppL10n {
 
   @override
   String get spendingByCategory => 'ক্যাটাগরি অনুযায়ী খরচ';
+
+  @override
+  String get spendingOverview => 'খরচের সারসংক্ষেপ';
+
+  @override
+  String get totalExpense => 'মোট খরচ';
+
+  @override
+  String get othersCategory => 'অন্যান্য';
 
   @override
   String get recentTransactions => 'সাম্প্রতিক লেনদেন';
@@ -770,6 +802,9 @@ class AppL10nBn extends AppL10n {
 
   @override
   String get thisMonth => 'এই মাস';
+
+  @override
+  String get lastMonth => 'গত মাস';
 
   @override
   String get today => 'আজ';

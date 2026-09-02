@@ -19,8 +19,9 @@ abstract final class AppConfig {
       googleServerClientId.isEmpty ? null : googleServerClientId;
 
   /// Public links surfaced in Settings.
-  static const String privacyPolicyUrl = 'https://kori.app/privacy';
-  static const String termsUrl = 'https://kori.app/terms';
+  static const String privacyPolicyUrl =
+      'https://poisapotro-app.web.app/privacy';
+  static const String termsUrl = 'https://poisapotro-app.web.app/terms';
   static const String androidStoreUrl =
       'https://play.google.com/store/apps/details?id=com.kori.moneytracker';
   static const String iosStoreUrl = 'https://apps.apple.com/app/id000000000';

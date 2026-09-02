@@ -40,7 +40,6 @@ class LoginScreen extends ConsumerWidget {
               children: <Widget>[
                 const Spacer(flex: 3),
                 KoriWordmark(
-                  title: context.l10n.appName,
                   subtitle: context.l10n.tagline,
                   logoSize: 104,
                 ),
@@ -59,6 +58,31 @@ class LoginScreen extends ConsumerWidget {
                   ),
                 ),
                 AppSizes.gapXxl,
+                OutlinedButton(
+                  onPressed: signInState.isLoading
+                      ? null
+                      : () async {
+                          final bool entered = await ref
+                              .read(signInControllerProvider.notifier)
+                              .continueAsGuest();
+                          if (entered && context.mounted) {
+                            context.go(AppRoutes.dashboard);
+                          }
+                        },
+                  child: Text(
+                    context.l10n.continueAsGuest,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                AppSizes.gapSm,
+                Text(
+                  context.l10n.guestModeCaption,
+                  textAlign: TextAlign.center,
+                  style: context.texts.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+                AppSizes.gapLg,
                 GoogleSignInButton(
                   loading: signInState.isLoading,
                   onPressed: () async {

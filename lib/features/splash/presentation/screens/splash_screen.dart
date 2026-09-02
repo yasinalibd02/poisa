@@ -95,29 +95,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     opacity: _logoFade.value,
                     child: Transform.scale(
                       scale: 0.7 + (_logoScale.value * 0.3),
-                      child: const KoriLogo(size: 112),
+                      child: const KoriLogo(size: 140),
                     ),
                   ),
-                  AppSizes.gapXl,
+                  AppSizes.gapLg,
                   Opacity(
                     opacity: _textFade.value,
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          context.l10n.appName,
-                          style: context.texts.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        AppSizes.gapXs,
-                        Text(
-                          context.l10n.tagline,
-                          style: context.texts.bodyMedium?.copyWith(
-                            color: context.colors.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      context.l10n.tagline,
+                      style: context.texts.bodyMedium?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ],

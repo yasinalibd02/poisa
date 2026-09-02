@@ -29,6 +29,21 @@ class AuthRepository {
 
   bool get isSignedIn => _auth.currentUser != null;
 
+  /// True while the session is an anonymous "guest" one.
+  bool get isGuest => _auth.currentUser?.isAnonymous ?? false;
+
+  /// Opens an anonymous session so the app is usable without a Google
+  /// account. Nothing is tied to a real identity; leaving guest mode wipes
+  /// the whole subtree and deletes this user (see
+  /// `SettingsActions.deleteAccountAndData`).
+  Future<UserCredential> continueAsGuest() async {
+    try {
+      return await _auth.signInAnonymously();
+    } catch (error) {
+      throw AppFailure.from(error);
+    }
+  }
+
   /// Runs the Google account chooser and exchanges the resulting ID token for
   /// a Firebase session.
   ///

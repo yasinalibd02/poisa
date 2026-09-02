@@ -34,6 +34,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final AppSettings settings = ref.watch(settingsProvider);
     final UserModel? user = ref.watch(userDocProvider).valueOrNull;
+    final bool isGuest = ref.watch(isGuestProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -46,7 +47,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           96,
         ),
         children: <Widget>[
-          _ProfileHeader(user: user),
+          _ProfileHeader(user: user, isGuest: isGuest),
 
           SettingsSection(
             title: context.l10n.preferences,
@@ -176,20 +177,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           AppSizes.gapXl,
           SettingsSection(
             title: context.l10n.profile,
-            children: <Widget>[
-              SettingsTile(
-                icon: Icons.logout_rounded,
-                label: context.l10n.signOut,
-                onTap: _signOut,
-              ),
-              const SettingsDivider(),
-              SettingsTile(
-                icon: Icons.delete_forever_rounded,
-                label: context.l10n.deleteAccountAndData,
-                destructive: true,
-                onTap: _busy ? null : _deleteAccount,
-              ),
-            ],
+            children: isGuest
+                ? <Widget>[
+                    SettingsTile(
+                      icon: Icons.logout_rounded,
+                      label: context.l10n.guestExit,
+                      description: context.l10n.guestModeCaption,
+                      destructive: true,
+                      onTap: _busy ? null : _exitGuest,
+                    ),
+                  ]
+                : <Widget>[
+                    SettingsTile(
+                      icon: Icons.logout_rounded,
+                      label: context.l10n.signOut,
+                      onTap: _signOut,
+                    ),
+                    const SettingsDivider(),
+                    SettingsTile(
+                      icon: Icons.delete_forever_rounded,
+                      label: context.l10n.deleteAccountAndData,
+                      destructive: true,
+                      onTap: _busy ? null : _deleteAccount,
+                    ),
+                  ],
           ),
         ],
       ),
@@ -362,6 +373,34 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     await ref.read(signInControllerProvider.notifier).signOut();
   }
 
+  /// Guest sessions own no recoverable data, so leaving one wipes the whole
+  /// subtree and deletes the anonymous user — the same path as a full account
+  /// deletion, minus the typed confirmation.
+  Future<void> _exitGuest() async {
+    final bool confirmed = await showConfirmDialog(
+      context,
+      title: context.l10n.guestExitTitle,
+      message: context.l10n.guestExitBody,
+      confirmLabel: context.l10n.guestExit,
+    );
+    if (!confirmed || !mounted) return;
+
+    setState(() => _busy = true);
+    try {
+      await ref.read(settingsActionsProvider).deleteAccountAndData();
+      if (!mounted) return;
+      AppSnack.success(context, context.l10n.guestExitDone);
+    } catch (error) {
+      if (!mounted) return;
+      AppSnack.error(
+        context,
+        AppFailure.from(error).localizedMessage(context.l10n),
+      );
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   /// Two confirmations: a plain dialog, then a typed "DELETE".
   Future<void> _deleteAccount() async {
     final bool first = await showConfirmDialog(
@@ -397,13 +436,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 }
 
 class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader({required this.user});
+  const _ProfileHeader({required this.user, this.isGuest = false});
 
   final UserModel? user;
+  final bool isGuest;
 
   @override
   Widget build(BuildContext context) {
     final String? photo = user?.photoUrl;
+    final bool hasName = user?.displayName.trim().isNotEmpty ?? false;
+    final String name = isGuest
+        ? context.l10n.guestBadge
+        : (hasName ? user!.displayName : context.l10n.profile);
+    final String secondary = isGuest
+        ? context.l10n.guestModeCaption
+        : (user?.email ?? '');
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSizes.lg),
       child: Row(
@@ -411,15 +459,17 @@ class _ProfileHeader extends StatelessWidget {
           CircleAvatar(
             radius: 30,
             backgroundColor: context.colors.primary.withValues(alpha: 0.14),
-            foregroundImage: (photo != null && photo.isNotEmpty)
+            foregroundImage: (!isGuest && photo != null && photo.isNotEmpty)
                 ? NetworkImage(photo)
                 : null,
-            child: Text(
-              user?.initials ?? '',
-              style: context.texts.titleMedium?.copyWith(
-                color: context.colors.primary,
-              ),
-            ),
+            child: isGuest
+                ? Icon(Icons.person_outline_rounded, color: context.colors.primary)
+                : Text(
+                    user?.initials ?? '',
+                    style: context.texts.titleMedium?.copyWith(
+                      color: context.colors.primary,
+                    ),
+                  ),
           ),
           AppSizes.hGapLg,
           Expanded(
@@ -427,17 +477,15 @@ class _ProfileHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  user?.displayName.trim().isNotEmpty ?? false
-                      ? user!.displayName
-                      : context.l10n.profile,
+                  name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: context.texts.titleMedium,
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  user?.email ?? '',
-                  maxLines: 1,
+                  secondary,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.texts.bodySmall,
                 ),

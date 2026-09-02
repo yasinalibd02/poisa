@@ -5,14 +5,12 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/extensions/context_x.dart';
 import '../../../../core/utils/money_formatter.dart';
-import '../../../../core/utils/period_utils.dart';
 import '../../../accounts/presentation/providers/account_providers.dart';
+import '../../../reports/presentation/providers/report_providers.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
-import '../../../transactions/presentation/providers/transaction_providers.dart';
-import '../providers/dashboard_providers.dart';
 
-/// Hero card: total balance across accounts, with the selected month's income
-/// and expense underneath.
+/// Hero card: total balance across every account, with this month's movement
+/// underneath and a wallet glyph on the right.
 class BalanceCard extends ConsumerWidget {
   const BalanceCard({super.key});
 
@@ -20,8 +18,8 @@ class BalanceCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final MoneyFormatter money = ref.watch(moneyFormatterProvider);
     final double netWorth = ref.watch(netWorthProvider);
-    final DateRange range = ref.watch(selectedMonthRangeProvider);
-    final MoneySummary summary = ref.watch(summaryForRangeProvider(range));
+    final List<MonthlyTotals> months = ref.watch(monthlyComparisonProvider);
+    final _Trend trend = _trendFor(months);
 
     return Container(
       padding: const EdgeInsets.all(AppSizes.xl),
@@ -40,116 +38,112 @@ class BalanceCard extends ConsumerWidget {
           ),
         ],
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            context.l10n.totalBalance,
-            style: context.texts.labelLarge?.copyWith(
-              color: Colors.white.withValues(alpha: 0.8),
-            ),
-          ),
-          AppSizes.gapSm,
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: AlignmentDirectional.centerStart,
-            child: Text(
-              money.format(netWorth),
-              style: context.texts.displaySmall?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          AppSizes.gapXl,
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: _Metric(
-                  icon: Icons.south_west_rounded,
-                  label: context.l10n.income,
-                  value: money.format(summary.income),
-                  tint: AppColors.income,
-                ),
-              ),
-              Container(
-                width: 1,
-                height: 38,
-                color: Colors.white.withValues(alpha: 0.16),
-              ),
-              Expanded(
-                child: _Metric(
-                  icon: Icons.north_east_rounded,
-                  label: context.l10n.expense,
-                  value: money.format(summary.expense),
-                  tint: AppColors.expense,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Metric extends StatelessWidget {
-  const _Metric({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.tint,
-  });
-
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color tint;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.sm),
-      child: Row(
-        children: <Widget>[
-          Container(
-            width: 34,
-            height: 34,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.16),
-              borderRadius: AppSizes.brSm,
-            ),
-            child: Icon(icon, size: 18, color: Colors.white),
-          ),
-          AppSizes.hGapSm,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.texts.labelSmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.78),
+                  context.l10n.totalBalance,
+                  style: context.texts.labelLarge?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.85),
                   ),
                 ),
+                AppSizes.gapSm,
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: AlignmentDirectional.centerStart,
                   child: Text(
-                    value,
-                    style: context.texts.titleSmall?.copyWith(
+                    money.format(netWorth, forceDecimals: true),
+                    style: context.texts.headlineMedium?.copyWith(
                       color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                 ),
+                AppSizes.gapMd,
+                _TrendPill(trend: trend, money: money),
               ],
+            ),
+          ),
+          AppSizes.hGapMd,
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.18),
+              borderRadius: AppSizes.brMd,
+            ),
+            child: const Icon(
+              Icons.account_balance_wallet_rounded,
+              color: Colors.white,
+              size: 26,
             ),
           ),
         ],
       ),
+    );
+  }
+
+  _Trend _trendFor(List<MonthlyTotals> months) {
+    if (months.length < 2) return const _Trend(label: null, up: true);
+    final double current = months.last.income - months.last.expense;
+    final double previous =
+        months[months.length - 2].income - months[months.length - 2].expense;
+    final double base = previous.abs();
+    if (base < 1) return const _Trend(label: null, up: true);
+    final double pct = (current - previous) / base * 100;
+    return _Trend(label: pct.abs(), up: pct >= 0);
+  }
+}
+
+class _Trend {
+  const _Trend({required this.label, required this.up});
+
+  /// The percentage magnitude, or `null` when there is not enough history.
+  final double? label;
+  final bool up;
+}
+
+class _TrendPill extends StatelessWidget {
+  const _TrendPill({required this.trend, required this.money});
+
+  final _Trend trend;
+  final MoneyFormatter money;
+
+  @override
+  Widget build(BuildContext context) {
+    final double? pct = trend.label;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Text(
+          context.l10n.thisMonth,
+          style: context.texts.labelMedium?.copyWith(
+            color: Colors.white.withValues(alpha: 0.85),
+          ),
+        ),
+        if (pct != null) ...<Widget>[
+          AppSizes.hGapSm,
+          Icon(
+            trend.up
+                ? Icons.arrow_outward_rounded
+                : Icons.south_east_rounded,
+            size: 15,
+            color: Colors.white,
+          ),
+          const SizedBox(width: 2),
+          Text(
+            '${money.number(pct, decimals: 1)}%',
+            style: context.texts.labelMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
