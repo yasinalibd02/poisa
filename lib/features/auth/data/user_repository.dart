@@ -77,16 +77,20 @@ class UserRepository {
     }
   }
 
+  // Fixed, deterministic ids (rather than Firestore's random .doc() ids) make
+  // this safe to run more than once — e.g. a first-sign-in race between two
+  // devices, or a retry after a dropped connection — since a repeat write
+  // overwrites the same seed documents instead of creating duplicates.
   void _addSeedWrites(WriteBatch batch, String languageCode, DateTime now) {
     int order = 0;
     for (final SeedCategory seed in DefaultSeedData.all) {
       batch.set(
-        _refs.categories.doc(),
+        _refs.categories.doc('seed_${seed.key}'),
         seed.toModel(sortOrder: order++, now: now).toMap(),
       );
     }
 
-    batch.set(_refs.accounts.doc(), <String, Object?>{
+    batch.set(_refs.accounts.doc('seed_cash'), <String, Object?>{
       'name': DefaultSeedData.cashAccountName(languageCode),
       'type': AccountType.cash.name,
       'icon': AccountType.cash.defaultIconKey,

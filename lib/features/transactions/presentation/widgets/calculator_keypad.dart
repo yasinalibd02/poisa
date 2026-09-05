@@ -137,13 +137,13 @@ class _KeypadKey extends StatelessWidget {
                     onLongPress!();
                   },
             child: SizedBox(
-              height: 52,
+              height: 44,
               child: Center(
                 child: icon != null
-                    ? Icon(icon, size: 22, color: fg)
+                    ? Icon(icon, size: 20, color: fg)
                     : Text(
                         label ?? '',
-                        style: context.texts.titleLarge?.copyWith(
+                        style: context.texts.titleMedium?.copyWith(
                           color: fg,
                           fontWeight: FontWeight.w600,
                         ),

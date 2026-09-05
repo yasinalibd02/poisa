@@ -2,11 +2,26 @@
     <!-- Firestore sync and Google Sign-In. All data is readable offline from
          the local cache when this is unavailable. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Runtime-requested on Android 13+ by NotificationService before the
+         daily reminder push can show. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:label="Poisa"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Channel/icon/color FCM falls back to when a notification arrives
+             with the app killed, so flutter_local_notifications never gets a
+             chance to run. Must match NotificationService's channel id. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="daily_reminder_channel" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/notification_color" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -12,7 +12,11 @@
 abstract final class AppConfig {
   static const String googleServerClientId = String.fromEnvironment(
     'GOOGLE_SERVER_CLIENT_ID',
-    defaultValue: '',
+    // Web client ID (client_type 3) from google-services.json / Firebase
+    // console. Baked in as the default so release builds made without the
+    // --dart-define still get an ID token from Google on Android.
+    defaultValue:
+        '495721871472-0jelm3tqr6nuqheuomgobveutgrk2a7k.apps.googleusercontent.com',
   );
 
   static String? get serverClientIdOrNull =>

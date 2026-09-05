@@ -92,77 +92,86 @@ class _TransactionEditorScreenState
         ],
       ),
       body: SafeArea(
-        child: ListView(
+        child: Padding(
           padding: const EdgeInsets.fromLTRB(
             AppSizes.screenPadding,
             AppSizes.sm,
             AppSizes.screenPadding,
-            AppSizes.xl,
+            AppSizes.sm,
           ),
-          children: <Widget>[
-            SegmentedTabs<TransactionType>(
-              values: const <TransactionType>[
-                TransactionType.expense,
-                TransactionType.income,
-                TransactionType.transfer,
-              ],
-              labels: <String>[
-                context.l10n.expense,
-                context.l10n.income,
-                context.l10n.transfer,
-              ],
-              activeColors: const <Color>[
-                AppColors.expense,
-                AppColors.income,
-                AppColors.transfer,
-              ],
-              selected: state.type,
-              onChanged: _controller.setType,
-            ),
-            AppSizes.gapXl,
-            _AmountDisplay(
-              state: state,
-              money: money,
-              heroTag: _isEditing ? null : AppShell.addTransactionHeroTag,
-            ),
-            AppSizes.gapLg,
-            if (!state.type.isTransfer) ...<Widget>[
-              CategoryChipRow(
-                type: state.type.isIncome
-                    ? CategoryType.income
-                    : CategoryType.expense,
-                selectedId: state.categoryId,
-                onSelected: _controller.setCategory,
-                onMore: _pickCategory,
+          child: Column(
+            children: <Widget>[
+              SegmentedTabs<TransactionType>(
+                values: const <TransactionType>[
+                  TransactionType.expense,
+                  TransactionType.income,
+                  TransactionType.transfer,
+                ],
+                labels: <String>[
+                  context.l10n.expense,
+                  context.l10n.income,
+                  context.l10n.transfer,
+                ],
+                activeColors: const <Color>[
+                  AppColors.expense,
+                  AppColors.income,
+                  AppColors.transfer,
+                ],
+                selected: state.type,
+                onChanged: _controller.setType,
               ),
-              AppSizes.gapLg,
+              AppSizes.gapMd,
+              _AmountDisplay(
+                state: state,
+                money: money,
+                heroTag: _isEditing ? null : AppShell.addTransactionHeroTag,
+              ),
+              AppSizes.gapMd,
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      if (!state.type.isTransfer) ...<Widget>[
+                        CategoryChipRow(
+                          type: state.type.isIncome
+                              ? CategoryType.income
+                              : CategoryType.expense,
+                          selectedId: state.categoryId,
+                          onSelected: _controller.setCategory,
+                          onMore: _pickCategory,
+                        ),
+                        AppSizes.gapMd,
+                      ],
+                      _accountAndDateFields(state),
+                      AppSizes.gapMd,
+                      TextField(
+                        controller: _noteController,
+                        onChanged: _controller.setNote,
+                        textCapitalization: TextCapitalization.sentences,
+                        maxLength: 140,
+                        decoration: InputDecoration(
+                          labelText:
+                              '${context.l10n.note} · ${context.l10n.labelOptional}',
+                          hintText: context.l10n.notePlaceholder,
+                          counterText: '',
+                          prefixIcon: const Icon(Icons.edit_note_rounded),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              AppSizes.gapSm,
+              CalculatorKeypad(
+                onDigit: _controller.tapDigit,
+                onDecimal: _controller.tapDecimal,
+                onOperation: _controller.tapOperation,
+                onEquals: _controller.tapEquals,
+                onBackspace: _controller.tapBackspace,
+                onClear: _controller.tapClear,
+              ),
             ],
-            _accountFields(state),
-            AppSizes.gapMd,
-            _dateField(state),
-            AppSizes.gapMd,
-            TextField(
-              controller: _noteController,
-              onChanged: _controller.setNote,
-              textCapitalization: TextCapitalization.sentences,
-              maxLength: 140,
-              decoration: InputDecoration(
-                labelText: '${context.l10n.note} · ${context.l10n.labelOptional}',
-                hintText: context.l10n.notePlaceholder,
-                counterText: '',
-                prefixIcon: const Icon(Icons.edit_note_rounded),
-              ),
-            ),
-            AppSizes.gapLg,
-            CalculatorKeypad(
-              onDigit: _controller.tapDigit,
-              onDecimal: _controller.tapDecimal,
-              onOperation: _controller.tapOperation,
-              onEquals: _controller.tapEquals,
-              onBackspace: _controller.tapBackspace,
-              onClear: _controller.tapClear,
-            ),
-          ],
+          ),
         ),
       ),
       bottomNavigationBar: SafeArea(
@@ -186,55 +195,77 @@ class _TransactionEditorScreenState
     );
   }
 
-  Widget _accountFields(TransactionEditorState state) {
+  Widget _accountAndDateFields(TransactionEditorState state) {
     final Map<String, AccountModel> accounts = ref.watch(accountMapProvider);
     final String? fromName = accounts[state.accountId]?.name;
     final String? toName = accounts[state.toAccountId]?.name;
+    final DateLabels dates = ref.watch(dateLabelsProvider);
+    final MoneyFormatter money = ref.watch(moneyFormatterProvider);
+
+    final DateTime now = DateTime.now();
+    final bool isToday =
+        state.date.year == now.year &&
+        state.date.month == now.month &&
+        state.date.day == now.day;
+    final Widget dateField = EditorFieldRow(
+      icon: Icons.event_rounded,
+      label: context.l10n.date,
+      // The half-width row has no room for the full "Sep 5, 2026 · 1:17 PM"
+      // string; today's date is the common case, so just the time is enough
+      // to tell it's "now" — a picked past/future date still shows its day.
+      value: money.localizeDigits(
+        isToday ? dates.time(state.date) : dates.dateTime(state.date),
+      ),
+      emphasised: true,
+      onTap: _pickDateTime,
+    );
 
     if (!state.type.isTransfer) {
-      return EditorFieldRow(
-        icon: Icons.account_balance_wallet_rounded,
-        label: context.l10n.account,
-        value: fromName ?? context.l10n.selectAccount,
-        emphasised: fromName != null,
-        onTap: () => _pickAccount(isDestination: false),
+      return Row(
+        children: <Widget>[
+          Expanded(
+            child: EditorFieldRow(
+              icon: Icons.account_balance_wallet_rounded,
+              label: context.l10n.account,
+              value: fromName ?? context.l10n.selectAccount,
+              emphasised: fromName != null,
+              onTap: () => _pickAccount(isDestination: false),
+            ),
+          ),
+          AppSizes.hGapSm,
+          Expanded(child: dateField),
+        ],
       );
     }
 
-    return Row(
+    return Column(
       children: <Widget>[
-        Expanded(
-          child: EditorFieldRow(
-            icon: Icons.logout_rounded,
-            label: context.l10n.fromAccount,
-            value: fromName ?? context.l10n.selectAccount,
-            emphasised: fromName != null,
-            onTap: () => _pickAccount(isDestination: false),
-          ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: EditorFieldRow(
+                icon: Icons.logout_rounded,
+                label: context.l10n.fromAccount,
+                value: fromName ?? context.l10n.selectAccount,
+                emphasised: fromName != null,
+                onTap: () => _pickAccount(isDestination: false),
+              ),
+            ),
+            AppSizes.hGapSm,
+            Expanded(
+              child: EditorFieldRow(
+                icon: Icons.login_rounded,
+                label: context.l10n.toAccount,
+                value: toName ?? context.l10n.selectAccount,
+                emphasised: toName != null,
+                onTap: () => _pickAccount(isDestination: true),
+              ),
+            ),
+          ],
         ),
-        AppSizes.hGapSm,
-        Expanded(
-          child: EditorFieldRow(
-            icon: Icons.login_rounded,
-            label: context.l10n.toAccount,
-            value: toName ?? context.l10n.selectAccount,
-            emphasised: toName != null,
-            onTap: () => _pickAccount(isDestination: true),
-          ),
-        ),
+        AppSizes.gapMd,
+        dateField,
       ],
-    );
-  }
-
-  Widget _dateField(TransactionEditorState state) {
-    final DateLabels dates = ref.watch(dateLabelsProvider);
-    final MoneyFormatter money = ref.watch(moneyFormatterProvider);
-    return EditorFieldRow(
-      icon: Icons.event_rounded,
-      label: context.l10n.date,
-      value: money.localizeDigits(dates.dateTime(state.date)),
-      emphasised: true,
-      onTap: _pickDateTime,
     );
   }
 
@@ -374,8 +405,8 @@ class _AmountDisplay extends ConsumerWidget {
     final Widget card = Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
-        horizontal: AppSizes.xl,
-        vertical: AppSizes.xl,
+        horizontal: AppSizes.lg,
+        vertical: AppSizes.md,
       ),
       decoration: BoxDecoration(
         borderRadius: AppSizes.brLg,

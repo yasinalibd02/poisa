@@ -33,8 +33,8 @@ class EditorFieldRow extends StatelessWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.lg,
-            vertical: AppSizes.md,
+            horizontal: AppSizes.md,
+            vertical: AppSizes.sm,
           ),
           decoration: BoxDecoration(
             borderRadius: AppSizes.brMd,

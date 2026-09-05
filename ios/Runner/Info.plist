@@ -69,6 +69,15 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Lets FCM data messages wake the app to run the background handler.
+	     The "Push Notifications" capability (adds the aps-environment
+	     entitlement) still has to be turned on for this target in Xcode, and
+	     an APNs auth key uploaded in Firebase console — see NotificationService
+	     doc comment. -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

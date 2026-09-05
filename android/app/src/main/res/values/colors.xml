@@ -4,4 +4,6 @@
          over to the Flutter splash with no colour flash. -->
     <color name="kori_launch_background">#F5F7F6</color>
 	<color name="ic_launcher_background">#014F3E</color>
+    <!-- Matches AppColors.primary — the accent tint for FCM notifications. -->
+    <color name="notification_color">#1B7F6B</color>
 </resources>
