@@ -4,13 +4,18 @@ import 'package:go_router/go_router.dart';
 
 import '../core/constants/app_sizes.dart';
 import '../core/extensions/context_x.dart';
-import '../core/widgets/offline_banner.dart';
 import '../core/widgets/state_views.dart';
 import '../features/auth/presentation/providers/user_providers.dart';
 import 'routes.dart';
 
-/// Persistent chrome around the four tabbed screens: the offline banner, the
-/// bottom navigation bar and the centre "add transaction" FAB.
+/// Persistent chrome around the four tabbed screens: the bottom navigation bar
+/// and the centre "add transaction" FAB.
+///
+/// There is deliberately no "you are offline" banner. Every read is served
+/// from the local cache and every write is applied to it immediately and
+/// replayed when the connection returns, so a missing connection changes
+/// nothing the user can act on — the banner only ever announced a state that
+/// was not a problem, and it did so by sitting on top of the status bar.
 class AppShell extends ConsumerWidget {
   const AppShell({super.key, required this.location, required this.child});
 
@@ -34,21 +39,14 @@ class AppShell extends ConsumerWidget {
     final AsyncValue<void> bootstrap = ref.watch(userBootstrapProvider);
 
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          const OfflineBanner(),
-          Expanded(
-            child: bootstrap.when(
-              // Seeding only ever runs once, on the very first sign-in.
-              loading: () => const _BootstrapSkeleton(),
-              error: (Object error, _) => ErrorStateView(
-                error: error,
-                onRetry: () => ref.invalidate(userBootstrapProvider),
-              ),
-              data: (_) => child,
-            ),
-          ),
-        ],
+      body: bootstrap.when(
+        // Seeding only ever runs once, on the very first sign-in.
+        loading: () => const _BootstrapSkeleton(),
+        error: (Object error, _) => ErrorStateView(
+          error: error,
+          onRetry: () => ref.invalidate(userBootstrapProvider),
+        ),
+        data: (_) => child,
       ),
       floatingActionButton: Hero(
         tag: addTransactionHeroTag,

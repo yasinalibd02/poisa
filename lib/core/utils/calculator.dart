@@ -39,6 +39,11 @@ class CalculatorState {
 
   static const int _maxDigits = 12;
 
+  /// Money is stored and displayed to two decimal places, so a third one can
+  /// only ever be rounded away on save. The keypad stops accepting digits at
+  /// that point rather than showing a figure the saved amount will not match.
+  static const int _maxDecimals = 2;
+
   double get value => double.tryParse(entry) ?? 0;
 
   bool get hasPendingOperation => operation != null;
@@ -53,10 +58,17 @@ class CalculatorState {
     if (startNewEntry) {
       return _copy(entry: d == '.' ? '0.' : d, startNewEntry: false);
     }
+    if (_decimalsTyped >= _maxDecimals) return this;
     final String digitsOnly = entry.replaceAll('.', '').replaceAll('-', '');
     if (digitsOnly.length >= _maxDigits) return this;
     if (entry == '0' && d != '.') return _copy(entry: d);
     return _copy(entry: entry + d);
+  }
+
+  /// How many digits have been typed after the decimal point.
+  int get _decimalsTyped {
+    final int dot = entry.indexOf('.');
+    return dot < 0 ? 0 : entry.length - dot - 1;
   }
 
   CalculatorState decimalPoint() {

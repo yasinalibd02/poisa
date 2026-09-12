@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/services/firestore_refs.dart';
+import '../../../core/services/offline_write.dart';
 import '../../../core/utils/app_failure.dart';
 import 'account_model.dart';
 
@@ -25,53 +26,37 @@ class AccountRepository {
   }
 
   Future<String> create(AccountModel account) async {
-    try {
-      final DocumentReference<Map<String, dynamic>> doc = _refs.accounts.doc();
-      await doc.set(account.toMap());
-      return doc.id;
-    } catch (error) {
-      throw AppFailure.from(error);
-    }
+    final DocumentReference<Map<String, dynamic>> doc = _refs.accounts.doc();
+    queueWrite(doc.set(account.toMap()), 'account create ${doc.id}');
+    return doc.id;
   }
 
   Future<void> update(AccountModel account) async {
-    try {
-      await _refs.accounts.doc(account.id).update(account.toMap());
-    } catch (error) {
-      throw AppFailure.from(error);
-    }
+    queueWrite(
+      _refs.accounts.doc(account.id).update(account.toMap()),
+      'account update ${account.id}',
+    );
   }
 
   Future<void> delete(String id) async {
-    try {
-      await _refs.accounts.doc(id).delete();
-    } catch (error) {
-      throw AppFailure.from(error);
-    }
+    queueWrite(_refs.accounts.doc(id).delete(), 'account delete $id');
   }
 
   Future<void> setArchived(String id, bool archived) async {
-    try {
-      await _refs.accounts.doc(id).update(<String, Object?>{
-        'isArchived': archived,
-      });
-    } catch (error) {
-      throw AppFailure.from(error);
-    }
+    queueWrite(
+      _refs.accounts.doc(id).update(<String, Object?>{'isArchived': archived}),
+      'account archive $id',
+    );
   }
 
   Future<void> reorder(List<AccountModel> ordered) async {
-    try {
-      final WriteBatch batch = _refs.batch();
-      for (int i = 0; i < ordered.length; i++) {
-        batch.update(_refs.accounts.doc(ordered[i].id), <String, Object?>{
-          'sortOrder': i,
-        });
-      }
-      await batch.commit();
-    } catch (error) {
-      throw AppFailure.from(error);
+    final WriteBatch batch = _refs.batch();
+    for (int i = 0; i < ordered.length; i++) {
+      batch.update(_refs.accounts.doc(ordered[i].id), <String, Object?>{
+        'sortOrder': i,
+      });
     }
+    queueWrite(batch.commit(), 'account reorder');
   }
 
   int nextSortOrder(List<AccountModel> existing) {

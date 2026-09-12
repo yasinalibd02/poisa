@@ -811,4 +811,115 @@ class AppL10nBn extends AppL10n {
 
   @override
   String get yesterday => 'গতকাল';
+
+  @override
+  String get loans => 'ধার-কর্জ';
+
+  @override
+  String get loansSubtitle => 'কত পাবেন আর কত দেবেন';
+
+  @override
+  String get loansReceivable => 'পাবো';
+
+  @override
+  String get loansPayable => 'দিবো';
+
+  @override
+  String get loansNet => 'সব মিলিয়ে';
+
+  @override
+  String get loansNetUp => 'সব মিলিয়ে আপনি যত দেবেন, তার চেয়ে বেশি পাবেন।';
+
+  @override
+  String get loansNetDown => 'সব মিলিয়ে আপনি যত পাবেন, তার চেয়ে বেশি দেবেন।';
+
+  @override
+  String get loansBreakdown => 'বিস্তারিত';
+
+  @override
+  String get loanGivenTotal => 'ধার দিয়েছি';
+
+  @override
+  String get loanRecoveredTotal => 'ফেরত পেয়েছি';
+
+  @override
+  String get loanTakenTotal => 'ধার নিয়েছি';
+
+  @override
+  String get loanRepaidTotal => 'শোধ করেছি';
+
+  @override
+  String get loanHistory => 'ধারের হিসাব';
+
+  @override
+  String get noLoansTitle => 'এখনো কোনো ধার নেই';
+
+  @override
+  String get noLoansBody =>
+      'ধার দেওয়া বা নেওয়া টাকা ধারের ক্যাটাগরিতে লিখে রাখুন, সবকিছুর হিসাব এখানে দেখা যাবে।';
+
+  @override
+  String get exportData => 'তথ্য রপ্তানি';
+
+  @override
+  String get exportDataBody => 'আপনার সব লেনদেনের হিসাব সংরক্ষণ বা শেয়ার করুন';
+
+  @override
+  String get exportChooseFormat => 'ফরম্যাট বেছে নিন';
+
+  @override
+  String get exportFormatCsv => 'CSV স্প্রেডশিট';
+
+  @override
+  String get exportFormatCsvBody => 'Excel বা Google Sheets-এ খোলা যায়';
+
+  @override
+  String get exportFormatPdf => 'PDF রিপোর্ট';
+
+  @override
+  String get exportFormatPdfBody => 'সাজানো বিবরণী, ছাপানোর উপযোগী';
+
+  @override
+  String get exportActionShare => 'শেয়ার করুন';
+
+  @override
+  String get exportActionShareBody => 'ফোনের যেকোনো অ্যাপ দিয়ে পাঠান';
+
+  @override
+  String get exportActionSave => 'ডিভাইসে সেভ করুন';
+
+  @override
+  String get exportActionSaveBody => 'Downloads ফোল্ডারে একটি কপি রাখুন';
+
+  @override
+  String exportSaved(String location) {
+    return '$location-এ সেভ হয়েছে';
+  }
+
+  @override
+  String get exportPdfTitle => 'লেনদেনের বিবরণী';
+
+  @override
+  String exportPdfGenerated(String date) {
+    return 'তৈরি হয়েছে $date';
+  }
+
+  @override
+  String get exportPdfTotalIncome => 'মোট আয়';
+
+  @override
+  String get exportPdfTotalExpense => 'মোট খরচ';
+
+  @override
+  String get exportPdfNet => 'নিট';
+
+  @override
+  String exportPdfCount(String count) {
+    return '$countটি লেনদেন';
+  }
+
+  @override
+  String exportPdfPage(String current, String total) {
+    return 'পৃষ্ঠা $current / $total';
+  }
 }

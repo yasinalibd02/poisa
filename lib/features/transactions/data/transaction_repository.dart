@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/services/firestore_refs.dart';
+import '../../../core/services/offline_write.dart';
 import '../../../core/utils/app_failure.dart';
 import 'transaction_model.dart';
 
@@ -39,72 +40,54 @@ class TransactionRepository {
   }
 
   Future<TransactionModel> create(TransactionModel transaction) async {
-    try {
-      final DocumentReference<Map<String, dynamic>> doc = _refs.transactions
-          .doc();
-      final TransactionModel saved = transaction.copyWith(id: doc.id);
-      await doc.set(saved.toMap());
-      return saved;
-    } catch (error) {
-      throw AppFailure.from(error);
-    }
+    final DocumentReference<Map<String, dynamic>> doc = _refs.transactions
+        .doc();
+    final TransactionModel saved = transaction.copyWith(id: doc.id);
+    queueWrite(doc.set(saved.toMap()), 'transaction create ${doc.id}');
+    return saved;
   }
 
   Future<void> update(TransactionModel transaction) async {
-    try {
-      await _refs.transactions.doc(transaction.id).set(transaction.toMap());
-    } catch (error) {
-      throw AppFailure.from(error);
-    }
+    queueWrite(
+      _refs.transactions.doc(transaction.id).set(transaction.toMap()),
+      'transaction update ${transaction.id}',
+    );
   }
 
   Future<void> delete(String id) async {
-    try {
-      await _refs.transactions.doc(id).delete();
-    } catch (error) {
-      throw AppFailure.from(error);
-    }
+    queueWrite(_refs.transactions.doc(id).delete(), 'transaction delete $id');
   }
 
   /// Re-creates a deleted transaction under its original id, so the undo
   /// snackbar restores the exact row rather than a copy.
   Future<void> restore(TransactionModel transaction) async {
-    try {
-      await _refs.transactions.doc(transaction.id).set(transaction.toMap());
-    } catch (error) {
-      throw AppFailure.from(error);
-    }
+    queueWrite(
+      _refs.transactions.doc(transaction.id).set(transaction.toMap()),
+      'transaction restore ${transaction.id}',
+    );
   }
 
   Future<void> deleteMany(Iterable<String> ids) async {
-    try {
-      final List<String> all = ids.toList(growable: false);
-      for (int start = 0; start < all.length; start += _writeBatchSize) {
-        final WriteBatch batch = _refs.batch();
-        for (final String id in all.skip(start).take(_writeBatchSize)) {
-          batch.delete(_refs.transactions.doc(id));
-        }
-        await batch.commit();
+    final List<String> all = ids.toList(growable: false);
+    for (int start = 0; start < all.length; start += _writeBatchSize) {
+      final WriteBatch batch = _refs.batch();
+      for (final String id in all.skip(start).take(_writeBatchSize)) {
+        batch.delete(_refs.transactions.doc(id));
       }
-    } catch (error) {
-      throw AppFailure.from(error);
+      queueWrite(batch.commit(), 'transaction bulk delete');
     }
   }
 
   Future<void> restoreMany(Iterable<TransactionModel> transactions) async {
-    try {
-      final List<TransactionModel> all = transactions.toList(growable: false);
-      for (int start = 0; start < all.length; start += _writeBatchSize) {
-        final WriteBatch batch = _refs.batch();
-        for (final TransactionModel item in all.skip(start).take(
-          _writeBatchSize,
-        )) {
-          batch.set(_refs.transactions.doc(item.id), item.toMap());
-        }
-        await batch.commit();
+    final List<TransactionModel> all = transactions.toList(growable: false);
+    for (int start = 0; start < all.length; start += _writeBatchSize) {
+      final WriteBatch batch = _refs.batch();
+      for (final TransactionModel item in all.skip(start).take(
+        _writeBatchSize,
+      )) {
+        batch.set(_refs.transactions.doc(item.id), item.toMap());
       }
-    } catch (error) {
-      throw AppFailure.from(error);
+      queueWrite(batch.commit(), 'transaction bulk restore');
     }
   }
 
@@ -125,7 +108,10 @@ class TransactionRepository {
   /// back to counting cached documents when there is no connection.
   Future<int> _count(Query<Map<String, dynamic>> query) async {
     try {
-      final AggregateQuerySnapshot snapshot = await query.count().get();
+      final AggregateQuerySnapshot snapshot = await query
+          .count()
+          .get()
+          .timeout(kReadTimeout);
       return snapshot.count ?? 0;
     } catch (_) {
       try {
@@ -171,7 +157,7 @@ class TransactionRepository {
     Map<String, Object?> update,
   ) async {
     try {
-      final QuerySnapshot<Map<String, dynamic>> snapshot = await query.get();
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await _read(query);
       final List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
           snapshot.docs;
       final Map<String, Object?> payload = <String, Object?>{
@@ -185,21 +171,35 @@ class TransactionRepository {
         ).take(_writeBatchSize)) {
           batch.update(doc.reference, payload);
         }
-        await batch.commit();
+        queueWrite(batch.commit(), 'transaction reassign');
       }
     } catch (error) {
       throw AppFailure.from(error);
     }
   }
 
-  /// One-shot read of everything, for CSV export.
+  /// One-shot read of everything, for the CSV/PDF export.
   Future<List<TransactionModel>> fetchAll() async {
     try {
-      final QuerySnapshot<Map<String, dynamic>> snapshot = await _byDateDesc
-          .get();
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await _read(
+        _byDateDesc,
+      );
       return snapshot.docs.map(TransactionModel.fromDoc).toList(growable: false);
     } catch (error) {
       throw AppFailure.from(error);
+    }
+  }
+
+  /// A one-shot query that cannot hang and cannot fail for want of a network:
+  /// the server is given [kReadTimeout] to answer, and the local cache — which
+  /// the ledger listener keeps fully populated — takes over otherwise.
+  Future<QuerySnapshot<Map<String, dynamic>>> _read(
+    Query<Map<String, dynamic>> query,
+  ) async {
+    try {
+      return await query.get().timeout(kReadTimeout);
+    } catch (_) {
+      return query.get(const GetOptions(source: Source.cache));
     }
   }
 }

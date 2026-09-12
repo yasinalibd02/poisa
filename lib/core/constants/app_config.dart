@@ -30,5 +30,8 @@ abstract final class AppConfig {
       'https://play.google.com/store/apps/details?id=com.kori.moneytracker';
   static const String iosStoreUrl = 'https://apps.apple.com/app/id000000000';
 
-  static const String appVersion = '1.0.0';
+  /// Shown in Settings → About. Kept in step with `version:` in pubspec.yaml
+  /// by hand — bump both together, or the About row will claim a release the
+  /// user is not running.
+  static const String appVersion = '1.1.0';
 }

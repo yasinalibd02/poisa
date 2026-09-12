@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -66,6 +68,15 @@ final FutureProvider<void> userBootstrapProvider = FutureProvider<void>((
         .read(settingsProvider.notifier)
         .hydrateFromRemote(existingProfile);
   }
+
+  // De-duplicates the defaults earlier builds doubled up, and backfills the
+  // ones added since this account was seeded. Deliberately not awaited: it is
+  // a background tidy-up whose result reaches the screen through the
+  // categories listener anyway, and making the whole app wait on it would undo
+  // the point of a bootstrap that no longer blocks on the network.
+  unawaited(
+    repository.reconcileDefaultCategories().catchError((Object _) {}),
+  );
 });
 
 /// Pushes local preference changes up to the profile document.

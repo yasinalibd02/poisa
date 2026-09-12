@@ -8,14 +8,20 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/currencies.dart';
 import '../../../../core/extensions/context_x.dart';
 import '../../../../core/services/link_service.dart';
+import '../../../../core/services/pdf_export_service.dart';
 import '../../../../core/utils/app_failure.dart';
+import '../../../../core/utils/money_formatter.dart';
+import '../../../../core/utils/period_utils.dart';
 import '../../../../core/widgets/app_dialogs.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../auth/data/user_model.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../auth/presentation/providers/user_providers.dart';
 import '../../data/app_settings.dart';
+import '../providers/export_actions.dart';
 import '../providers/settings_actions.dart';
 import '../providers/settings_provider.dart';
+import '../widgets/export_sheet.dart';
 import '../widgets/settings_tiles.dart';
 
 /// Profile, preferences, data export and the two account-level destructive
@@ -125,9 +131,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SettingsDivider(),
               SettingsTile(
+                icon: Icons.handshake_rounded,
+                label: context.l10n.loans,
+                description: context.l10n.loansSubtitle,
+                onTap: () => context.push(AppRoutes.loans),
+              ),
+              const SettingsDivider(),
+              SettingsTile(
                 icon: Icons.download_rounded,
-                label: context.l10n.exportCsv,
-                onTap: _busy ? null : _exportCsv,
+                label: context.l10n.exportData,
+                description: context.l10n.exportDataBody,
+                onTap: _busy ? null : _export,
                 trailing: _busy
                     ? const SizedBox(
                         width: 18,
@@ -320,24 +334,42 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
-  Future<void> _exportCsv() async {
+  /// Format, then destination, then one build. The export is rendered once
+  /// and either shared or written to the device, so choosing "save" never
+  /// costs a second pass over the ledger.
+  Future<void> _export() async {
+    final ExportFormat? format = await showExportFormatSheet(context);
+    if (format == null || !mounted) return;
+
+    final ExportDestination? destination = await showExportDestinationSheet(
+      context,
+    );
+    if (destination == null || !mounted) return;
+
     setState(() => _busy = true);
     try {
-      final String? csv = await ref
-          .read(settingsActionsProvider)
-          .buildExportCsv();
+      final ExportActions actions = ref.read(exportActionsProvider);
+      final ExportFile? file = await actions.build(
+        format: format,
+        pdfLabels: _pdfLabels(),
+      );
       if (!mounted) return;
 
-      if (csv == null) {
+      if (file == null) {
         AppSnack.show(context, context.l10n.nothingToExport);
         return;
       }
 
-      await ref
-          .read(csvExportServiceProvider)
-          .share(csv: csv, subject: context.l10n.exportCsv);
-      if (!mounted) return;
-      AppSnack.success(context, context.l10n.exportSuccess);
+      switch (destination) {
+        case ExportDestination.share:
+          await actions.share(file, subject: context.l10n.exportData);
+          if (!mounted) return;
+          AppSnack.success(context, context.l10n.exportSuccess);
+        case ExportDestination.save:
+          final String location = await actions.saveToDevice(file);
+          if (!mounted) return;
+          AppSnack.success(context, context.l10n.exportSaved(location));
+      }
     } catch (error) {
       if (!mounted) return;
       AppSnack.error(
@@ -347,6 +379,31 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  /// The PDF is built off the widget tree, so every string it prints is
+  /// resolved here while a [BuildContext] is still in hand.
+  PdfReportLabels _pdfLabels() {
+    final AppL10n l10n = context.l10n;
+    final MoneyFormatter money = ref.read(moneyFormatterProvider);
+    final DateLabels dates = ref.read(dateLabelsProvider);
+
+    return PdfReportLabels(
+      title: l10n.exportPdfTitle,
+      generated: l10n.exportPdfGenerated(dates.dateTime(DateTime.now())),
+      totalIncome: l10n.exportPdfTotalIncome,
+      totalExpense: l10n.exportPdfTotalExpense,
+      net: l10n.exportPdfNet,
+      countOf: (int count) => l10n.exportPdfCount(money.number(count)),
+      pageOf: (int current, int total) =>
+          l10n.exportPdfPage(money.number(current), money.number(total)),
+      date: l10n.date,
+      type: l10n.type,
+      category: l10n.category,
+      account: l10n.account,
+      note: l10n.note,
+      amount: l10n.amount,
+    );
   }
 
   Future<void> _shareApp() async {

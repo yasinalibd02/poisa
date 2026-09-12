@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/constants/enums.dart';
 import '../../../../core/extensions/context_x.dart';
 import '../../../../core/utils/money_formatter.dart';
 import '../../../accounts/presentation/providers/account_providers.dart';
 import '../../../reports/presentation/providers/report_providers.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
+import '../../../transactions/presentation/providers/transaction_list_provider.dart';
 
 /// Hero card: total balance across every account, with this month's movement
-/// underneath and a wallet glyph on the right.
+/// underneath and a wallet glyph on the right that opens the ledger filtered
+/// to income — the "where did this balance come from" question the card
+/// invites.
 class BalanceCard extends ConsumerWidget {
   const BalanceCard({super.key});
 
@@ -69,18 +75,13 @@ class BalanceCard extends ConsumerWidget {
             ),
           ),
           AppSizes.hGapMd,
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.18),
-              borderRadius: AppSizes.brMd,
-            ),
-            child: const Icon(
-              Icons.account_balance_wallet_rounded,
-              color: Colors.white,
-              size: 26,
-            ),
+          _IncomeShortcut(
+            onTap: () {
+              ref
+                  .read(transactionFiltersProvider.notifier)
+                  .showOnlyType(TransactionType.income);
+              context.go(AppRoutes.transactions);
+            },
           ),
         ],
       ),
@@ -96,6 +97,39 @@ class BalanceCard extends ConsumerWidget {
     if (base < 1) return const _Trend(label: null, up: true);
     final double pct = (current - previous) / base * 100;
     return _Trend(label: pct.abs(), up: pct >= 0);
+  }
+}
+
+/// The wallet glyph, as a button. Its own [Material] rather than an [InkWell]
+/// straight on the card, so the ripple stays inside the rounded square instead
+/// of spreading across the gradient behind it.
+class _IncomeShortcut extends StatelessWidget {
+  const _IncomeShortcut({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white.withValues(alpha: 0.18),
+      borderRadius: AppSizes.brMd,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Tooltip(
+          message: context.l10n.income,
+          child: const SizedBox(
+            width: 52,
+            height: 52,
+            child: Icon(
+              Icons.account_balance_wallet_rounded,
+              color: Colors.white,
+              size: 26,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

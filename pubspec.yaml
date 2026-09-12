@@ -1,7 +1,8 @@
 name: kori
 description: "Poisa — simple money tracking. সহজ হিসাব।"
 publish_to: 'none'
-version: 1.0.0+3
+version: 1.1.0+4
+
 
 environment:
   sdk: ^3.5.0
@@ -34,9 +35,10 @@ dependencies:
   # --- Links (privacy policy, store listing) ---
   url_launcher: 6.3.2
 
-  # --- CSV export / sharing ---
+  # --- CSV / PDF export, saving and sharing ---
   path_provider: 2.1.6
   share_plus: 11.1.0
+  pdf: 3.11.3
   firebase_messaging: ^16.6.0
   flutter_local_notifications: ^22.3.0
 

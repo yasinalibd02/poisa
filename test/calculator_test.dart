@@ -82,5 +82,44 @@ void main() {
           .backspace();
       expect(state.entry, '0');
     });
+
+    test('stops accepting digits after two decimal places', () {
+      final CalculatorState state = const CalculatorState()
+          .digit('1')
+          .digit('2')
+          .decimalPoint()
+          .digit('3')
+          .digit('4')
+          .digit('5')
+          .digit('6');
+      expect(state.entry, '12.34');
+      expect(state.value, 12.34);
+    });
+
+    test('the two-decimal cap does not limit digits before the point', () {
+      final CalculatorState state = const CalculatorState()
+          .digit('1')
+          .digit('2')
+          .digit('3')
+          .digit('4')
+          .digit('5')
+          .digit('6')
+          .decimalPoint()
+          .digit('7')
+          .digit('8');
+      expect(state.entry, '123456.78');
+    });
+
+    test('backspacing past the cap frees the slot again', () {
+      final CalculatorState state = const CalculatorState()
+          .digit('9')
+          .decimalPoint()
+          .digit('9')
+          .digit('9')
+          .digit('9')
+          .backspace()
+          .digit('5');
+      expect(state.entry, '9.95');
+    });
   });
 }

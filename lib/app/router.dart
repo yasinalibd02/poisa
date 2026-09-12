@@ -8,6 +8,7 @@ import '../features/auth/presentation/screens/login_screen.dart';
 import '../features/budget/presentation/screens/budget_screen.dart';
 import '../features/categories/presentation/screens/categories_screen.dart';
 import '../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../features/loans/presentation/screens/loans_screen.dart';
 import '../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../features/reports/presentation/screens/reports_screen.dart';
 import '../features/settings/data/app_settings.dart';
@@ -152,6 +153,12 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (BuildContext context, GoRouterState state) =>
             const BudgetScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.loans,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            const LoansScreen(),
       ),
     ],
   );

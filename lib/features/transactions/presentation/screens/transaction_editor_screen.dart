@@ -45,21 +45,74 @@ class TransactionEditorScreen extends ConsumerStatefulWidget {
 }
 
 class _TransactionEditorScreenState
-    extends ConsumerState<TransactionEditorScreen> {
+    extends ConsumerState<TransactionEditorScreen> with WidgetsBindingObserver {
   late final EditorArgs _args = (
     existing: widget.existing,
-    initialType: widget.existing?.type ??
-        TransactionType.fromName(widget.initialType),
+    initialType:
+        widget.existing?.type ?? TransactionType.fromName(widget.initialType),
   );
 
   late final TextEditingController _noteController = TextEditingController(
     text: widget.existing?.note ?? '',
   );
 
+  /// Watched so the amount keypad can step aside for the system keyboard: the
+  /// two cannot share the bottom of the screen, and a note is typed with
+  /// letters, not digits.
+  final FocusNode _noteFocus = FocusNode();
+
+  /// Share of the screen the keypad is allowed. A quarter leaves the category
+  /// chips, the account/date row and the note field enough room to sit on one
+  /// screen, which is what stops them needing a scroll.
+  static const double _keypadHeightFraction = 0.25;
+
+  /// Below this the keys stop being comfortably tappable, so a short screen
+  /// gives the keypad more than its quarter rather than shrinking further.
+  static const double _minKeypadHeight = 196;
+
+  /// Whether the system keyboard is currently on screen. Tracked so a
+  /// close can be told apart from an open — see [didChangeMetrics].
+  bool _keyboardOpen = false;
+
   bool get _isEditing => widget.existing != null;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _noteFocus.addListener(_onNoteFocusChanged);
+  }
+
+  void _onNoteFocusChanged() => setState(() {});
+
+  /// Dismissing the system keyboard does not take focus off the field that
+  /// raised it — Android's back gesture and the swipe-down both leave the
+  /// note focused. Without this, closing the keyboard that way left the
+  /// keypad hidden and nothing in its place, with no way back to the digits.
+  ///
+  /// Focus is released on the keyboard's close, so "the note is being typed
+  /// into" and "the keyboard is up" can never drift apart.
+  @override
+  void didChangeMetrics() {
+    // The new inset is not readable until the frame the change lands in.
+    WidgetsBinding.instance.addPostFrameCallback((Duration _) {
+      if (!mounted) return;
+      final bool open = View.of(context).viewInsets.bottom > 0;
+      // Only a genuine open → closed transition counts. Reacting to a bare
+      // "inset is zero" would fire in the moment between the field taking
+      // focus and the keyboard animating in, and close it again immediately.
+      if (open == _keyboardOpen) return;
+      _keyboardOpen = open;
+      if (!open && _noteFocus.hasFocus) _noteFocus.unfocus();
+    });
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _noteFocus
+      ..removeListener(_onNoteFocusChanged)
+      ..dispose();
     _noteController.dispose();
     super.dispose();
   }
@@ -77,7 +130,9 @@ class _TransactionEditorScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _isEditing ? context.l10n.editTransaction : context.l10n.addTransaction,
+          _isEditing
+              ? context.l10n.editTransaction
+              : context.l10n.addTransaction,
         ),
         actions: <Widget>[
           if (_isEditing)
@@ -92,85 +147,114 @@ class _TransactionEditorScreenState
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSizes.screenPadding,
-            AppSizes.sm,
-            AppSizes.screenPadding,
-            AppSizes.sm,
-          ),
-          child: Column(
-            children: <Widget>[
-              SegmentedTabs<TransactionType>(
-                values: const <TransactionType>[
-                  TransactionType.expense,
-                  TransactionType.income,
-                  TransactionType.transfer,
-                ],
-                labels: <String>[
-                  context.l10n.expense,
-                  context.l10n.income,
-                  context.l10n.transfer,
-                ],
-                activeColors: const <Color>[
-                  AppColors.expense,
-                  AppColors.income,
-                  AppColors.transfer,
-                ],
-                selected: state.type,
-                onChanged: _controller.setType,
-              ),
-              AppSizes.gapMd,
-              _AmountDisplay(
-                state: state,
-                money: money,
-                heroTag: _isEditing ? null : AppShell.addTransactionHeroTag,
-              ),
-              AppSizes.gapMd,
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      if (!state.type.isTransfer) ...<Widget>[
-                        CategoryChipRow(
-                          type: state.type.isIncome
-                              ? CategoryType.income
-                              : CategoryType.expense,
-                          selectedId: state.categoryId,
-                          onSelected: _controller.setCategory,
-                          onMore: _pickCategory,
-                        ),
-                        AppSizes.gapMd,
-                      ],
-                      _accountAndDateFields(state),
-                      AppSizes.gapMd,
-                      TextField(
-                        controller: _noteController,
-                        onChanged: _controller.setNote,
-                        textCapitalization: TextCapitalization.sentences,
-                        maxLength: 140,
-                        decoration: InputDecoration(
-                          labelText:
-                              '${context.l10n.note} · ${context.l10n.labelOptional}',
-                          hintText: context.l10n.notePlaceholder,
-                          counterText: '',
-                          prefixIcon: const Icon(Icons.edit_note_rounded),
-                        ),
-                      ),
-                    ],
+        // A tap on any empty part of the form puts the note down and brings
+        // the keypad back. The fields and chips have their own recognisers and
+        // still win their own taps; this only catches what nothing else did.
+        //
+        // Belt and braces alongside [didChangeMetrics]: some keyboards — a
+        // floating IME, a hardware one — never report a view inset, so their
+        // dismissal is invisible to the framework. This works regardless.
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: _noteFocus.unfocus,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSizes.screenPadding,
+              AppSizes.sm,
+              AppSizes.screenPadding,
+              AppSizes.sm,
+            ),
+            child: Column(
+              children: <Widget>[
+                SegmentedTabs<TransactionType>(
+                  values: const <TransactionType>[
+                    TransactionType.expense,
+                    TransactionType.income,
+                    TransactionType.transfer,
+                  ],
+                  labels: <String>[
+                    context.l10n.expense,
+                    context.l10n.income,
+                    context.l10n.transfer,
+                  ],
+                  activeColors: const <Color>[
+                    AppColors.expense,
+                    AppColors.income,
+                    AppColors.transfer,
+                  ],
+                  selected: state.type,
+                  onChanged: _controller.setType,
+                ),
+                AppSizes.gapMd,
+                // Tapping the amount dismisses the note's keyboard, which brings
+                // the keypad back — the obvious way to return to editing the
+                // figure after typing a note.
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _noteFocus.unfocus,
+                  child: _AmountDisplay(
+                    state: state,
+                    money: money,
+                    heroTag: _isEditing ? null : AppShell.addTransactionHeroTag,
                   ),
                 ),
-              ),
-              AppSizes.gapSm,
-              CalculatorKeypad(
-                onDigit: _controller.tapDigit,
-                onDecimal: _controller.tapDecimal,
-                onOperation: _controller.tapOperation,
-                onEquals: _controller.tapEquals,
-                onBackspace: _controller.tapBackspace,
-                onClear: _controller.tapClear,
-              ),
-            ],
+                AppSizes.gapMd,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        if (!state.type.isTransfer) ...<Widget>[
+                          CategoryChipRow(
+                            type: state.type.isIncome
+                                ? CategoryType.income
+                                : CategoryType.expense,
+                            selectedId: state.categoryId,
+                            onSelected: _controller.setCategory,
+                            onMore: _pickCategory,
+                          ),
+                          AppSizes.gapMd,
+                        ],
+                        _accountAndDateFields(state),
+                        AppSizes.gapMd,
+                        TextField(
+                          controller: _noteController,
+                          focusNode: _noteFocus,
+                          onChanged: _controller.setNote,
+                          // Done gives the keyboard its own way out, which puts
+                          // the keypad and the Save button back within reach
+                          // without the user having to guess where to tap.
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (_) => _noteFocus.unfocus(),
+                          textCapitalization: TextCapitalization.sentences,
+                          maxLength: 140,
+                          decoration: InputDecoration(
+                            labelText:
+                                '${context.l10n.note} · ${context.l10n.labelOptional}',
+                            hintText: context.l10n.notePlaceholder,
+                            counterText: '',
+                            prefixIcon: const Icon(Icons.edit_note_rounded),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (!_noteFocus.hasFocus) ...<Widget>[
+                  AppSizes.gapSm,
+                  SizedBox(
+                    height: _keypadHeight(context),
+                    child: CalculatorKeypad(
+                      onDigit: _controller.tapDigit,
+                      onDecimal: _controller.tapDecimal,
+                      onOperation: _controller.tapOperation,
+                      onEquals: _controller.tapEquals,
+                      onBackspace: _controller.tapBackspace,
+                      onClear: _controller.tapClear,
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       ),
@@ -195,6 +279,14 @@ class _TransactionEditorScreenState
     );
   }
 
+  /// A quarter of the screen, floored at [_minKeypadHeight] so the keys stay
+  /// usable on a small device.
+  double _keypadHeight(BuildContext context) {
+    final double screen = MediaQuery.sizeOf(context).height;
+    final double quarter = screen * _keypadHeightFraction;
+    return quarter < _minKeypadHeight ? _minKeypadHeight : quarter;
+  }
+
   Widget _accountAndDateFields(TransactionEditorState state) {
     final Map<String, AccountModel> accounts = ref.watch(accountMapProvider);
     final String? fromName = accounts[state.accountId]?.name;
@@ -203,8 +295,7 @@ class _TransactionEditorScreenState
     final MoneyFormatter money = ref.watch(moneyFormatterProvider);
 
     final DateTime now = DateTime.now();
-    final bool isToday =
-        state.date.year == now.year &&
+    final bool isToday = state.date.year == now.year &&
         state.date.month == now.month &&
         state.date.day == now.day;
     final Widget dateField = EditorFieldRow(
@@ -287,9 +378,8 @@ class _TransactionEditorScreenState
     );
     final String? id = await showAccountPicker(
       context,
-      title: isDestination
-          ? context.l10n.toAccount
-          : context.l10n.selectAccount,
+      title:
+          isDestination ? context.l10n.toAccount : context.l10n.selectAccount,
       selectedId: isDestination ? state.toAccountId : state.accountId,
       excludeId: state.type.isTransfer
           ? (isDestination ? state.accountId : state.toAccountId)
@@ -337,9 +427,7 @@ class _TransactionEditorScreenState
       return;
     }
 
-    final EditorError? error = ref
-        .read(transactionEditorProvider(_args))
-        .error;
+    final EditorError? error = ref.read(transactionEditorProvider(_args)).error;
     if (error != null) {
       AppSnack.error(context, _errorMessage(error));
       return;
@@ -351,11 +439,11 @@ class _TransactionEditorScreenState
   }
 
   String _errorMessage(EditorError error) => switch (error) {
-    EditorError.amount => context.l10n.errorAmountRequired,
-    EditorError.category => context.l10n.errorCategoryRequired,
-    EditorError.account => context.l10n.errorAccountRequired,
-    EditorError.sameAccount => context.l10n.errorSameAccount,
-  };
+        EditorError.amount => context.l10n.errorAmountRequired,
+        EditorError.category => context.l10n.errorCategoryRequired,
+        EditorError.account => context.l10n.errorAccountRequired,
+        EditorError.sameAccount => context.l10n.errorSameAccount,
+      };
 
   Future<void> _confirmDelete() async {
     final TransactionModel? existing = widget.existing;
@@ -394,10 +482,10 @@ class _AmountDisplay extends ConsumerWidget {
     final String language = ref.watch(
       settingsProvider.select((AppSettings s) => s.languageCode),
     );
-    final Map<String, CategoryModel> categories = ref.watch(categoryMapProvider);
-    final CategoryModel? category = state.categoryId == null
-        ? null
-        : categories[state.categoryId];
+    final Map<String, CategoryModel> categories =
+        ref.watch(categoryMapProvider);
+    final CategoryModel? category =
+        state.categoryId == null ? null : categories[state.categoryId];
 
     final Color tint = AmountText.colorFor(state.type);
     final bool hasAmountError = state.error == EditorError.amount;
@@ -462,14 +550,14 @@ class _AmountDisplay extends ConsumerWidget {
       tag: heroTag!,
       // The FAB flying into this card would otherwise carry its circular
       // Material shape through the flight.
-      flightShuttleBuilder:
-          (
-            BuildContext flightContext,
-            Animation<double> animation,
-            HeroFlightDirection direction,
-            BuildContext fromContext,
-            BuildContext toContext,
-          ) => FadeTransition(opacity: animation, child: card),
+      flightShuttleBuilder: (
+        BuildContext flightContext,
+        Animation<double> animation,
+        HeroFlightDirection direction,
+        BuildContext fromContext,
+        BuildContext toContext,
+      ) =>
+          FadeTransition(opacity: animation, child: card),
       child: Material(color: Colors.transparent, child: card),
     );
   }

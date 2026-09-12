@@ -15,6 +15,7 @@ abstract final class AppRoutes {
   static const String categories = '/categories';
   static const String accounts = '/accounts';
   static const String budget = '/budget';
+  static const String loans = '/loans';
 
   /// Screens the auth guard lets an unauthenticated user reach.
   static const Set<String> publicRoutes = <String>{splash, onboarding, login};

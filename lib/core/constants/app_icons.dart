@@ -7,7 +7,7 @@ abstract final class AppIcons {
   /// Shown when a stored key is unknown (e.g. removed in a later release).
   static const IconData fallback = Icons.category_rounded;
 
-  /// The full catalogue offered by the icon picker — 72 icons.
+  /// The full catalogue offered by the icon picker — 75 icons.
   static const Map<String, IconData> catalogue = <String, IconData>{
     // Food & drink
     'restaurant': Icons.restaurant_rounded,
@@ -97,6 +97,11 @@ abstract final class AppIcons {
     'interest': Icons.percent_rounded,
     'refund': Icons.replay_rounded,
     'sell': Icons.sell_rounded,
+
+    // Lending
+    'handshake': Icons.handshake_rounded,
+    'loan_given': Icons.call_made_rounded,
+    'loan_taken': Icons.call_received_rounded,
 
     // Wallets & misc
     'cash': Icons.account_balance_wallet_rounded,

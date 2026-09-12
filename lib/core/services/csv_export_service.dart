@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'dart:ui' show Rect;
 
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../features/accounts/data/account_model.dart';
@@ -10,7 +8,8 @@ import '../../features/categories/data/category_model.dart';
 import '../../features/transactions/data/transaction_model.dart';
 import '../utils/app_failure.dart';
 
-/// Writes the ledger to a CSV file and hands it to the system share sheet.
+/// Renders the ledger as CSV text. Writing it somewhere and delivering it is
+/// `ExportActions`' job, so the same rendering serves both share and save.
 ///
 /// The export is deliberately plain, Excel-friendly CSV in the invariant
 /// locale (ISO dates, `.` decimals, English headers) so it opens cleanly in
@@ -73,30 +72,6 @@ class CsvExportService {
         value.contains('\r');
     if (!needsQuotes) return value;
     return '"${value.replaceAll('"', '""')}"';
-  }
-
-  /// Writes [csv] to a temporary file and opens the share sheet.
-  Future<void> share({
-    required String csv,
-    required String subject,
-    Rect? sharePositionOrigin,
-  }) async {
-    try {
-      final Directory directory = await getTemporaryDirectory();
-      final String stamp = DateFormat('yyyyMMdd-HHmm').format(DateTime.now());
-      final File file = File('${directory.path}/kori-export-$stamp.csv');
-      await file.writeAsString(csv);
-
-      await SharePlus.instance.share(
-        ShareParams(
-          files: <XFile>[XFile(file.path, mimeType: 'text/csv')],
-          subject: subject,
-          sharePositionOrigin: sharePositionOrigin,
-        ),
-      );
-    } catch (error) {
-      throw AppFailure.from(error);
-    }
   }
 
   /// Shares plain text (the "share app" action).

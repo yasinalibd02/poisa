@@ -41,6 +41,39 @@ class SeedCategory {
 /// Seeded once, on the user's first sign-in. These are marked `isDefault`, so
 /// they can be renamed and recoloured but not deleted.
 abstract final class DefaultSeedData {
+  /// The four lending categories, by seed key. The Loans screen recognises a
+  /// transaction purely by which of these its category is, so these keys are
+  /// part of the data contract and must not be renamed — the visible names
+  /// are the user's to change.
+  ///
+  /// Money out that someone now owes back.
+  static const String loanGivenKey = 'expense_loan_given';
+
+  /// Money out that settles something *you* borrowed.
+  static const String loanRepaidKey = 'expense_loan_repaid';
+
+  /// Money in that you now owe back.
+  static const String loanTakenKey = 'income_loan_taken';
+
+  /// Money in that settles something you lent out.
+  static const String loanRecoveredKey = 'income_loan_recovered';
+
+  /// Firestore document id for a seeded category key.
+  static String docIdFor(String key) => 'seed_$key';
+
+  /// Category document ids that make up the lending ledger.
+  static final String loanGivenId = docIdFor(loanGivenKey);
+  static final String loanRepaidId = docIdFor(loanRepaidKey);
+  static final String loanTakenId = docIdFor(loanTakenKey);
+  static final String loanRecoveredId = docIdFor(loanRecoveredKey);
+
+  static final Set<String> loanCategoryIds = <String>{
+    loanGivenId,
+    loanRepaidId,
+    loanTakenId,
+    loanRecoveredId,
+  };
+
   /// Name of the single starter account, per UI language.
   static String cashAccountName(String languageCode) =>
       languageCode == 'bn' ? 'নগদ' : 'Cash';
@@ -135,6 +168,22 @@ abstract final class DefaultSeedData {
       colorHex: '#F2A93B',
     ),
     SeedCategory(
+      key: loanGivenKey,
+      nameEn: 'Loan Given',
+      nameBn: 'ধার দিয়েছি',
+      type: CategoryType.expense,
+      icon: 'loan_given',
+      colorHex: '#5B6CD9',
+    ),
+    SeedCategory(
+      key: loanRepaidKey,
+      nameEn: 'Loan Repaid',
+      nameBn: 'ধার শোধ করেছি',
+      type: CategoryType.expense,
+      icon: 'handshake',
+      colorHex: '#44514F',
+    ),
+    SeedCategory(
       key: 'expense_other',
       nameEn: 'Other',
       nameBn: 'অন্যান্য',
@@ -194,6 +243,22 @@ abstract final class DefaultSeedData {
       colorHex: '#B6478F',
     ),
     SeedCategory(
+      key: loanTakenKey,
+      nameEn: 'Loan Taken',
+      nameBn: 'ধার নিয়েছি',
+      type: CategoryType.income,
+      icon: 'loan_taken',
+      colorHex: '#EF8B3C',
+    ),
+    SeedCategory(
+      key: loanRecoveredKey,
+      nameEn: 'Loan Recovered',
+      nameBn: 'ধার ফেরত পেয়েছি',
+      type: CategoryType.income,
+      icon: 'handshake',
+      colorHex: '#29A9BF',
+    ),
+    SeedCategory(
       key: 'income_other',
       nameEn: 'Other',
       nameBn: 'অন্যান্য',
@@ -207,4 +272,23 @@ abstract final class DefaultSeedData {
     ...expenseCategories,
     ...incomeCategories,
   ];
+
+  /// Defaults introduced after the first release, which accounts seeded before
+  /// it will not have. `UserRepository.reconcileDefaultCategories` backfills
+  /// exactly these and nothing else — an older default is left alone even if
+  /// its name no longer matches this file, because the user is free to rename
+  /// their categories and a "missing" one is far more likely to be a renamed
+  /// one than a genuinely absent one.
+  ///
+  /// Append to this list when adding a default in a future release.
+  static List<SeedCategory> get lateAdditions => all
+      .where(
+        (SeedCategory seed) => <String>{
+          loanGivenKey,
+          loanRepaidKey,
+          loanTakenKey,
+          loanRecoveredKey,
+        }.contains(seed.key),
+      )
+      .toList(growable: false);
 }

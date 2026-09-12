@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/extensions/context_x.dart';
 import '../../../../core/utils/calculator.dart';
 
 /// The amount keypad: digits plus the four operations, so amounts can be added
 /// up ("240 + 60") without leaving the form.
+///
+/// Its action keys are tinted with the *secondary* colour, not the primary
+/// one. `=` and Save sit one above the other, and in the same green they read
+/// as the same button — people were pressing `=` expecting the row to be
+/// saved. Amber keeps the only primary-coloured control on the screen the one
+/// that actually commits the transaction.
+///
+/// The five rows divide whatever height the parent gives, rather than each key
+/// standing at a fixed height. That is what lets the editor hand the keypad a
+/// quarter of the screen and keep the rest for the category, account and note
+/// fields, with no scrolling.
 class CalculatorKeypad extends StatelessWidget {
   const CalculatorKeypad({
     super.key,
@@ -63,17 +75,24 @@ class CalculatorKeypad extends StatelessWidget {
             label: '=',
             onTap: onEquals,
             flex: 3,
-            background: context.colors.primary,
-            foreground: context.colors.onPrimary,
+            background: context.colors.secondary,
+            foreground: context.colors.onSecondary,
           ),
         ]),
       ],
     );
   }
 
-  Widget _row(List<Widget> keys) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: AppSizes.xs),
-    child: Row(children: keys),
+  /// Each row takes an equal share of the available height, and `stretch`
+  /// passes that share down so the keys themselves grow and shrink with it.
+  Widget _row(List<Widget> keys) => Expanded(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.xs),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: keys,
+      ),
+    ),
   );
 
   Widget _digit(String value) =>
@@ -82,8 +101,10 @@ class CalculatorKeypad extends StatelessWidget {
   Widget _op(BuildContext context, CalcOp op) => _KeypadKey(
     label: op.symbol,
     onTap: () => onOperation(op),
-    background: context.colors.primary.withValues(alpha: 0.10),
-    foreground: context.colors.primary,
+    background: context.colors.secondary.withValues(alpha: 0.14),
+    foreground: context.isDark
+        ? context.colors.secondary
+        : AppColors.accentDark,
   );
 }
 
@@ -136,19 +157,16 @@ class _KeypadKey extends StatelessWidget {
                     HapticFeedback.mediumImpact();
                     onLongPress!();
                   },
-            child: SizedBox(
-              height: 44,
-              child: Center(
-                child: icon != null
-                    ? Icon(icon, size: 20, color: fg)
-                    : Text(
-                        label ?? '',
-                        style: context.texts.titleMedium?.copyWith(
-                          color: fg,
-                          fontWeight: FontWeight.w600,
-                        ),
+            child: Center(
+              child: icon != null
+                  ? Icon(icon, size: 20, color: fg)
+                  : Text(
+                      label ?? '',
+                      style: context.texts.titleMedium?.copyWith(
+                        color: fg,
+                        fontWeight: FontWeight.w600,
                       ),
-              ),
+                    ),
             ),
           ),
         ),

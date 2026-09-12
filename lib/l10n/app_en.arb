@@ -375,5 +375,70 @@
   "thisMonth": "This Month",
   "lastMonth": "Last Month",
   "today": "Today",
-  "yesterday": "Yesterday"
+  "yesterday": "Yesterday",
+  "loans": "Loans",
+  "loansSubtitle": "What you are owed and what you owe",
+  "loansReceivable": "You will receive",
+  "loansPayable": "You will pay",
+  "loansNet": "Net position",
+  "loansNetUp": "Overall, more is owed to you than by you.",
+  "loansNetDown": "Overall, you owe more than you are owed.",
+  "loansBreakdown": "Breakdown",
+  "loanGivenTotal": "Lent out",
+  "loanRecoveredTotal": "Recovered",
+  "loanTakenTotal": "Borrowed",
+  "loanRepaidTotal": "Repaid",
+  "loanHistory": "Loan history",
+  "noLoansTitle": "No loans yet",
+  "noLoansBody": "Record money you lend or borrow under the Loan categories and it will all be summed up here.",
+  "exportData": "Export data",
+  "exportDataBody": "Save or share your full transaction history",
+  "exportChooseFormat": "Choose a format",
+  "exportFormatCsv": "CSV spreadsheet",
+  "exportFormatCsvBody": "Opens in Excel or Google Sheets",
+  "exportFormatPdf": "PDF report",
+  "exportFormatPdfBody": "A formatted statement, ready to print",
+  "exportActionShare": "Share",
+  "exportActionShareBody": "Send it through any app on your phone",
+  "exportActionSave": "Save to device",
+  "exportActionSaveBody": "Keep a copy in your Downloads folder",
+  "exportSaved": "Saved to {location}",
+  "@exportSaved": {
+      "placeholders": {
+          "location": {
+              "type": "String"
+          }
+      }
+  },
+  "exportPdfTitle": "Transaction statement",
+  "exportPdfGenerated": "Generated {date}",
+  "@exportPdfGenerated": {
+      "placeholders": {
+          "date": {
+              "type": "String"
+          }
+      }
+  },
+  "exportPdfTotalIncome": "Total income",
+  "exportPdfTotalExpense": "Total expense",
+  "exportPdfNet": "Net",
+  "exportPdfCount": "{count} transactions",
+  "@exportPdfCount": {
+      "placeholders": {
+          "count": {
+              "type": "String"
+          }
+      }
+  },
+  "exportPdfPage": "Page {current} of {total}",
+  "@exportPdfPage": {
+      "placeholders": {
+          "current": {
+              "type": "String"
+          },
+          "total": {
+              "type": "String"
+          }
+      }
+  }
 }

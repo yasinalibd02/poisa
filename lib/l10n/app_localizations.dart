@@ -1560,6 +1560,210 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Yesterday'**
   String get yesterday;
+
+  /// No description provided for @loans.
+  ///
+  /// In en, this message translates to:
+  /// **'Loans'**
+  String get loans;
+
+  /// No description provided for @loansSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What you are owed and what you owe'**
+  String get loansSubtitle;
+
+  /// No description provided for @loansReceivable.
+  ///
+  /// In en, this message translates to:
+  /// **'You will receive'**
+  String get loansReceivable;
+
+  /// No description provided for @loansPayable.
+  ///
+  /// In en, this message translates to:
+  /// **'You will pay'**
+  String get loansPayable;
+
+  /// No description provided for @loansNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Net position'**
+  String get loansNet;
+
+  /// No description provided for @loansNetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall, more is owed to you than by you.'**
+  String get loansNetUp;
+
+  /// No description provided for @loansNetDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall, you owe more than you are owed.'**
+  String get loansNetDown;
+
+  /// No description provided for @loansBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakdown'**
+  String get loansBreakdown;
+
+  /// No description provided for @loanGivenTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Lent out'**
+  String get loanGivenTotal;
+
+  /// No description provided for @loanRecoveredTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovered'**
+  String get loanRecoveredTotal;
+
+  /// No description provided for @loanTakenTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Borrowed'**
+  String get loanTakenTotal;
+
+  /// No description provided for @loanRepaidTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Repaid'**
+  String get loanRepaidTotal;
+
+  /// No description provided for @loanHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Loan history'**
+  String get loanHistory;
+
+  /// No description provided for @noLoansTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No loans yet'**
+  String get noLoansTitle;
+
+  /// No description provided for @noLoansBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Record money you lend or borrow under the Loan categories and it will all be summed up here.'**
+  String get noLoansBody;
+
+  /// No description provided for @exportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Export data'**
+  String get exportData;
+
+  /// No description provided for @exportDataBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Save or share your full transaction history'**
+  String get exportDataBody;
+
+  /// No description provided for @exportChooseFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a format'**
+  String get exportChooseFormat;
+
+  /// No description provided for @exportFormatCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'CSV spreadsheet'**
+  String get exportFormatCsv;
+
+  /// No description provided for @exportFormatCsvBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens in Excel or Google Sheets'**
+  String get exportFormatCsvBody;
+
+  /// No description provided for @exportFormatPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF report'**
+  String get exportFormatPdf;
+
+  /// No description provided for @exportFormatPdfBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A formatted statement, ready to print'**
+  String get exportFormatPdfBody;
+
+  /// No description provided for @exportActionShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get exportActionShare;
+
+  /// No description provided for @exportActionShareBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Send it through any app on your phone'**
+  String get exportActionShareBody;
+
+  /// No description provided for @exportActionSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to device'**
+  String get exportActionSave;
+
+  /// No description provided for @exportActionSaveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep a copy in your Downloads folder'**
+  String get exportActionSaveBody;
+
+  /// No description provided for @exportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to {location}'**
+  String exportSaved(String location);
+
+  /// No description provided for @exportPdfTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction statement'**
+  String get exportPdfTitle;
+
+  /// No description provided for @exportPdfGenerated.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated {date}'**
+  String exportPdfGenerated(String date);
+
+  /// No description provided for @exportPdfTotalIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Total income'**
+  String get exportPdfTotalIncome;
+
+  /// No description provided for @exportPdfTotalExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Total expense'**
+  String get exportPdfTotalExpense;
+
+  /// No description provided for @exportPdfNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Net'**
+  String get exportPdfNet;
+
+  /// No description provided for @exportPdfCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} transactions'**
+  String exportPdfCount(String count);
+
+  /// No description provided for @exportPdfPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {current} of {total}'**
+  String exportPdfPage(String current, String total);
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

@@ -26,6 +26,13 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!-- "Save to device" writes exports into the app's Documents directory.
+	     These two make that directory browsable under "Poisa" in the Files
+	     app; without them a saved CSV/PDF would be invisible to the user. -->
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 	<!-- Google Sign-In redirects back through this URL scheme. Replace the
 	     placeholder with REVERSED_CLIENT_ID from GoogleService-Info.plist,
 	     which `flutterfire configure` downloads into ios/Runner/. -->

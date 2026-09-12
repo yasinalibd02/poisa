@@ -814,4 +814,115 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get yesterday => 'Yesterday';
+
+  @override
+  String get loans => 'Loans';
+
+  @override
+  String get loansSubtitle => 'What you are owed and what you owe';
+
+  @override
+  String get loansReceivable => 'You will receive';
+
+  @override
+  String get loansPayable => 'You will pay';
+
+  @override
+  String get loansNet => 'Net position';
+
+  @override
+  String get loansNetUp => 'Overall, more is owed to you than by you.';
+
+  @override
+  String get loansNetDown => 'Overall, you owe more than you are owed.';
+
+  @override
+  String get loansBreakdown => 'Breakdown';
+
+  @override
+  String get loanGivenTotal => 'Lent out';
+
+  @override
+  String get loanRecoveredTotal => 'Recovered';
+
+  @override
+  String get loanTakenTotal => 'Borrowed';
+
+  @override
+  String get loanRepaidTotal => 'Repaid';
+
+  @override
+  String get loanHistory => 'Loan history';
+
+  @override
+  String get noLoansTitle => 'No loans yet';
+
+  @override
+  String get noLoansBody =>
+      'Record money you lend or borrow under the Loan categories and it will all be summed up here.';
+
+  @override
+  String get exportData => 'Export data';
+
+  @override
+  String get exportDataBody => 'Save or share your full transaction history';
+
+  @override
+  String get exportChooseFormat => 'Choose a format';
+
+  @override
+  String get exportFormatCsv => 'CSV spreadsheet';
+
+  @override
+  String get exportFormatCsvBody => 'Opens in Excel or Google Sheets';
+
+  @override
+  String get exportFormatPdf => 'PDF report';
+
+  @override
+  String get exportFormatPdfBody => 'A formatted statement, ready to print';
+
+  @override
+  String get exportActionShare => 'Share';
+
+  @override
+  String get exportActionShareBody => 'Send it through any app on your phone';
+
+  @override
+  String get exportActionSave => 'Save to device';
+
+  @override
+  String get exportActionSaveBody => 'Keep a copy in your Downloads folder';
+
+  @override
+  String exportSaved(String location) {
+    return 'Saved to $location';
+  }
+
+  @override
+  String get exportPdfTitle => 'Transaction statement';
+
+  @override
+  String exportPdfGenerated(String date) {
+    return 'Generated $date';
+  }
+
+  @override
+  String get exportPdfTotalIncome => 'Total income';
+
+  @override
+  String get exportPdfTotalExpense => 'Total expense';
+
+  @override
+  String get exportPdfNet => 'Net';
+
+  @override
+  String exportPdfCount(String count) {
+    return '$count transactions';
+  }
+
+  @override
+  String exportPdfPage(String current, String total) {
+    return 'Page $current of $total';
+  }
 }

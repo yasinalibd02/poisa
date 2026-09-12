@@ -99,6 +99,13 @@ class TransactionFiltersController extends Notifier<TransactionFilters> {
     ref.read(transactionPageProvider.notifier).reset();
   }
 
+  /// Narrows the ledger to one side of it and drops every other filter —
+  /// what a "show me the income" jump from another screen should land on.
+  void showOnlyType(TransactionType type) {
+    state = TransactionFilters(types: <TransactionType>{type});
+    ref.read(transactionPageProvider.notifier).reset();
+  }
+
   void clear() {
     state = TransactionFilters(query: state.query);
     ref.read(transactionPageProvider.notifier).reset();

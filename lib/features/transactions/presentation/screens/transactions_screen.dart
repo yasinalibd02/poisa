@@ -61,6 +61,17 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Another screen can set the filters and then send the user here — the
+    // dashboard's wallet shortcut does exactly that. The search box is the one
+    // filter with its own copy of the state, so it is pulled back into line
+    // rather than left showing a query that is no longer being applied.
+    ref.listen<String>(
+      transactionFiltersProvider.select((TransactionFilters f) => f.query),
+      (String? previous, String next) {
+        if (_searchController.text != next) _searchController.text = next;
+      },
+    );
+
     final AsyncValue<List<TransactionModel>> ledger = ref.watch(
       allTransactionsProvider,
     );
