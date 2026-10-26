@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -74,17 +75,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   onPageChanged: (int page) => setState(() => _page = page),
                   children: <Widget>[
                     OnboardingSlide(
-                      icon: Icons.savings_rounded,
+                      icon: CupertinoIcons.money_dollar_circle_fill,
                       title: context.l10n.onboard1Title,
                       body: context.l10n.onboard1Body,
                     ),
                     OnboardingSlide(
-                      icon: Icons.track_changes_rounded,
+                      icon: CupertinoIcons.scope,
                       title: context.l10n.onboard2Title,
                       body: context.l10n.onboard2Body,
                     ),
                     OnboardingSlide(
-                      icon: Icons.insights_rounded,
+                      icon: CupertinoIcons.chart_bar_alt_fill,
                       title: context.l10n.onboard3Title,
                       body: context.l10n.onboard3Body,
                     ),

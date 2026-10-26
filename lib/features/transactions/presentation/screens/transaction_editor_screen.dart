@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -140,7 +141,7 @@ class _TransactionEditorScreenState
               tooltip: context.l10n.actionDelete,
               onPressed: state.saving ? null : _confirmDelete,
               icon: Icon(
-                Icons.delete_outline_rounded,
+                CupertinoIcons.trash,
                 color: context.colors.error,
               ),
             ),
@@ -200,59 +201,11 @@ class _TransactionEditorScreenState
                 ),
                 AppSizes.gapMd,
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        if (!state.type.isTransfer) ...<Widget>[
-                          CategoryChipRow(
-                            type: state.type.isIncome
-                                ? CategoryType.income
-                                : CategoryType.expense,
-                            selectedId: state.categoryId,
-                            onSelected: _controller.setCategory,
-                            onMore: _pickCategory,
-                          ),
-                          AppSizes.gapMd,
-                        ],
-                        _accountAndDateFields(state),
-                        AppSizes.gapMd,
-                        TextField(
-                          controller: _noteController,
-                          focusNode: _noteFocus,
-                          onChanged: _controller.setNote,
-                          // Done gives the keyboard its own way out, which puts
-                          // the keypad and the Save button back within reach
-                          // without the user having to guess where to tap.
-                          textInputAction: TextInputAction.done,
-                          onSubmitted: (_) => _noteFocus.unfocus(),
-                          textCapitalization: TextCapitalization.sentences,
-                          maxLength: 140,
-                          decoration: InputDecoration(
-                            labelText:
-                                '${context.l10n.note} · ${context.l10n.labelOptional}',
-                            hintText: context.l10n.notePlaceholder,
-                            counterText: '',
-                            prefixIcon: const Icon(Icons.edit_note_rounded),
-                          ),
-                        ),
-                      ],
-                    ),
+                  child: LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints box) =>
+                        _formAndKeypad(state, box.maxHeight),
                   ),
                 ),
-                if (!_noteFocus.hasFocus) ...<Widget>[
-                  AppSizes.gapSm,
-                  SizedBox(
-                    height: _keypadHeight(context),
-                    child: CalculatorKeypad(
-                      onDigit: _controller.tapDigit,
-                      onDecimal: _controller.tapDecimal,
-                      onOperation: _controller.tapOperation,
-                      onEquals: _controller.tapEquals,
-                      onBackspace: _controller.tapBackspace,
-                      onClear: _controller.tapClear,
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
@@ -287,6 +240,78 @@ class _TransactionEditorScreenState
     return quarter < _minKeypadHeight ? _minKeypadHeight : quarter;
   }
 
+  /// The form takes only the height it needs and the keypad fills the rest,
+  /// so tall screens get bigger keys instead of an empty gap between the note
+  /// and the keypad. The keypad never drops below [_keypadHeight]; on short
+  /// screens the form scrolls instead.
+  Widget _formAndKeypad(TransactionEditorState state, double maxHeight) {
+    final Widget form = SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          if (!state.type.isTransfer) ...<Widget>[
+            CategoryChipRow(
+              type: state.type.isIncome
+                  ? CategoryType.income
+                  : CategoryType.expense,
+              selectedId: state.categoryId,
+              onSelected: _controller.setCategory,
+              onMore: _pickCategory,
+            ),
+            AppSizes.gapMd,
+          ],
+          _accountAndDateFields(state),
+          AppSizes.gapMd,
+          TextField(
+            controller: _noteController,
+            focusNode: _noteFocus,
+            onChanged: _controller.setNote,
+            // Done gives the keyboard its own way out, which puts the keypad
+            // and the Save button back within reach without the user having
+            // to guess where to tap.
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) => _noteFocus.unfocus(),
+            textCapitalization: TextCapitalization.sentences,
+            maxLength: 140,
+            decoration: InputDecoration(
+              labelText: '${context.l10n.note} · ${context.l10n.labelOptional}',
+              hintText: context.l10n.notePlaceholder,
+              counterText: '',
+              prefixIcon: const Icon(CupertinoIcons.square_pencil),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (_noteFocus.hasFocus) return form;
+
+    final double keypadMin = _keypadHeight(context);
+    return Column(
+      children: <Widget>[
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: (maxHeight - keypadMin - AppSizes.sm).clamp(
+              0,
+              double.infinity,
+            ),
+          ),
+          child: form,
+        ),
+        AppSizes.gapSm,
+        Expanded(
+          child: CalculatorKeypad(
+            onDigit: _controller.tapDigit,
+            onDecimal: _controller.tapDecimal,
+            onOperation: _controller.tapOperation,
+            onEquals: _controller.tapEquals,
+            onBackspace: _controller.tapBackspace,
+            onClear: _controller.tapClear,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _accountAndDateFields(TransactionEditorState state) {
     final Map<String, AccountModel> accounts = ref.watch(accountMapProvider);
     final String? fromName = accounts[state.accountId]?.name;
@@ -299,7 +324,7 @@ class _TransactionEditorScreenState
         state.date.month == now.month &&
         state.date.day == now.day;
     final Widget dateField = EditorFieldRow(
-      icon: Icons.event_rounded,
+      icon: CupertinoIcons.calendar,
       label: context.l10n.date,
       // The half-width row has no room for the full "Sep 5, 2026 · 1:17 PM"
       // string; today's date is the common case, so just the time is enough
@@ -316,7 +341,7 @@ class _TransactionEditorScreenState
         children: <Widget>[
           Expanded(
             child: EditorFieldRow(
-              icon: Icons.account_balance_wallet_rounded,
+              icon: CupertinoIcons.creditcard_fill,
               label: context.l10n.account,
               value: fromName ?? context.l10n.selectAccount,
               emphasised: fromName != null,
@@ -335,7 +360,7 @@ class _TransactionEditorScreenState
           children: <Widget>[
             Expanded(
               child: EditorFieldRow(
-                icon: Icons.logout_rounded,
+                icon: CupertinoIcons.square_arrow_right,
                 label: context.l10n.fromAccount,
                 value: fromName ?? context.l10n.selectAccount,
                 emphasised: fromName != null,
@@ -345,7 +370,7 @@ class _TransactionEditorScreenState
             AppSizes.hGapSm,
             Expanded(
               child: EditorFieldRow(
-                icon: Icons.login_rounded,
+                icon: CupertinoIcons.arrow_turn_down_right,
                 label: context.l10n.toAccount,
                 value: toName ?? context.l10n.selectAccount,
                 emphasised: toName != null,

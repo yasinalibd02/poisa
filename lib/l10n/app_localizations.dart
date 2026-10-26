@@ -1764,6 +1764,72 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Page {current} of {total}'**
   String exportPdfPage(String current, String total);
+
+  /// No description provided for @dailyReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminder'**
+  String get dailyReminder;
+
+  /// No description provided for @dailyReminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A nudge to log the day\'s spending'**
+  String get dailyReminderBody;
+
+  /// No description provided for @reminderTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder time'**
+  String get reminderTime;
+
+  /// No description provided for @reminderNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged today\'s spending?'**
+  String get reminderNotificationTitle;
+
+  /// No description provided for @reminderNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add everything you spent today before you forget.'**
+  String get reminderNotificationBody;
+
+  /// No description provided for @reminderPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off for Poisa. Turn them on in system settings.'**
+  String get reminderPermissionDenied;
+
+  /// No description provided for @widgetTodaySpent.
+  ///
+  /// In en, this message translates to:
+  /// **'Spent today'**
+  String get widgetTodaySpent;
+
+  /// No description provided for @widgetThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get widgetThisMonth;
+
+  /// No description provided for @displayOverlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Display Overlay'**
+  String get displayOverlay;
+
+  /// No description provided for @displayOverlayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A floating bubble over other apps for quick expense entry'**
+  String get displayOverlayBody;
+
+  /// No description provided for @displayOverlayPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay permission is required. Turn it on in system settings.'**
+  String get displayOverlayPermissionDenied;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

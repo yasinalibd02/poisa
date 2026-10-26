@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -44,15 +45,15 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
             tooltip: context.l10n.showArchived,
             isSelected: _showArchived,
             onPressed: () => setState(() => _showArchived = !_showArchived),
-            icon: const Icon(Icons.archive_outlined),
-            selectedIcon: const Icon(Icons.archive_rounded),
+            icon: const Icon(CupertinoIcons.archivebox),
+            selectedIcon: const Icon(CupertinoIcons.archivebox_fill),
           ),
           AppSizes.hGapXs,
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showAccountEditor(context),
-        icon: const Icon(Icons.add_rounded),
+        icon: const Icon(CupertinoIcons.add),
         label: Text(context.l10n.newAccount),
       ),
       body: accounts.when(
@@ -68,7 +69,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
 
           if (visible.isEmpty) {
             return EmptyStateView(
-              icon: Icons.account_balance_wallet_rounded,
+              icon: CupertinoIcons.creditcard_fill,
               title: context.l10n.noAccountsTitle,
               message: context.l10n.noAccountsBody,
               actionLabel: context.l10n.newAccount,
@@ -312,7 +313,7 @@ class _AccountRow extends StatelessWidget {
             ),
           ),
           PopupMenuButton<_AccountAction>(
-            icon: const Icon(Icons.more_vert_rounded),
+            icon: const Icon(CupertinoIcons.ellipsis_vertical),
             onSelected: (_AccountAction action) => switch (action) {
               _AccountAction.edit => onEdit(),
               _AccountAction.archive => onArchiveToggle(),

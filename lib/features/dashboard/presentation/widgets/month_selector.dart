@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,7 +28,7 @@ class MonthSelector extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         _StepButton(
-          icon: Icons.chevron_left_rounded,
+          icon: CupertinoIcons.chevron_left,
           tooltip: dates.monthYear(PeriodUtils.addMonths(month, -1)),
           onPressed: controller.previous,
         ),
@@ -54,7 +55,7 @@ class MonthSelector extends ConsumerWidget {
           ),
         ),
         _StepButton(
-          icon: Icons.chevron_right_rounded,
+          icon: CupertinoIcons.chevron_right,
           tooltip: dates.monthYear(PeriodUtils.addMonths(month, 1)),
           onPressed: atCurrentMonth ? null : controller.next,
         ),

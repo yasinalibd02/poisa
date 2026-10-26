@@ -922,4 +922,41 @@ class AppL10nBn extends AppL10n {
   String exportPdfPage(String current, String total) {
     return 'পৃষ্ঠা $current / $total';
   }
+
+  @override
+  String get dailyReminder => 'দৈনিক রিমাইন্ডার';
+
+  @override
+  String get dailyReminderBody => 'দিনের খরচ লিখে রাখার কথা মনে করিয়ে দেবে';
+
+  @override
+  String get reminderTime => 'রিমাইন্ডারের সময়';
+
+  @override
+  String get reminderNotificationTitle => 'আজকের হিসাব লিখেছেন?';
+
+  @override
+  String get reminderNotificationBody =>
+      'আজ যত খরচ হয়েছে, ভুলে যাওয়ার আগেই যোগ করে ফেলুন।';
+
+  @override
+  String get reminderPermissionDenied =>
+      'Poisa-র নোটিফিকেশন বন্ধ আছে। সিস্টেম সেটিংস থেকে চালু করুন।';
+
+  @override
+  String get widgetTodaySpent => 'আজকের খরচ';
+
+  @override
+  String get widgetThisMonth => 'এই মাসে';
+
+  @override
+  String get displayOverlay => 'ডিসপ্লে ওভারলে (ফ্লোটিং বাবল)';
+
+  @override
+  String get displayOverlayBody =>
+      'অন্য অ্যাপের ওপর দ্রুত খরচ বা আয় লেখার ফ্লোটিং বাবল';
+
+  @override
+  String get displayOverlayPermissionDenied =>
+      'ডিসপ্লে ওভারলে পারমিশন প্রয়োজন। সিস্টেম সেটিংস থেকে চালু করুন।';
 }

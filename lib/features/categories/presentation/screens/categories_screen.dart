@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -62,8 +63,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
             tooltip: context.l10n.dragToReorder,
             isSelected: _reordering,
             onPressed: () => setState(() => _reordering = !_reordering),
-            icon: const Icon(Icons.swap_vert_rounded),
-            selectedIcon: const Icon(Icons.check_rounded),
+            icon: const Icon(CupertinoIcons.arrow_up_arrow_down),
+            selectedIcon: const Icon(CupertinoIcons.checkmark),
           ),
           AppSizes.hGapXs,
         ],
@@ -78,7 +79,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () =>
             showCategoryEditor(context, type: _currentType),
-        icon: const Icon(Icons.add_rounded),
+        icon: const Icon(CupertinoIcons.add),
         label: Text(context.l10n.newCategory),
       ),
       body: categories.when(
@@ -221,7 +222,7 @@ class _CategoryTab extends ConsumerWidget {
 
     if (categories.isEmpty) {
       return EmptyStateView(
-        icon: Icons.category_rounded,
+        icon: CupertinoIcons.square_grid_2x2_fill,
         title: context.l10n.noCategoriesTitle,
         message: context.l10n.noCategoriesBody,
         actionLabel: context.l10n.newCategory,
@@ -261,7 +262,7 @@ class _CategoryTab extends ConsumerWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            trailing: const Icon(Icons.drag_handle_rounded),
+            trailing: const Icon(CupertinoIcons.line_horizontal_3),
           );
         },
       );
@@ -340,7 +341,7 @@ class _CategoryCard extends StatelessWidget {
                   tooltip: context.l10n.actionDelete,
                   onPressed: onDelete,
                   icon: Icon(
-                    Icons.delete_outline_rounded,
+                    CupertinoIcons.trash,
                     color: context.colors.onSurfaceVariant,
                   ),
                 ),

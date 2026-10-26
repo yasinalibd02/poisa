@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -63,7 +64,7 @@ class CalculatorKeypad extends StatelessWidget {
           _KeypadKey(label: '.', onTap: onDecimal),
           _digit('0'),
           _KeypadKey(
-            icon: Icons.backspace_outlined,
+            icon: CupertinoIcons.delete_left,
             onTap: onBackspace,
             onLongPress: onClear,
           ),

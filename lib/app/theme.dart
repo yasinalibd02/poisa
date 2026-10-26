@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../core/constants/app_colors.dart';
@@ -63,6 +64,15 @@ abstract final class AppTheme {
       textTheme: text,
       splashFactory: InkSparkle.splashFactory,
       visualDensity: VisualDensity.standard,
+
+      // iOS-style chevron / xmark for every AppBar's automatic back and close
+      // buttons, matching the Cupertino icon set used across the app.
+      actionIconTheme: ActionIconThemeData(
+        backButtonIconBuilder: (BuildContext context) =>
+            const Icon(CupertinoIcons.back),
+        closeButtonIconBuilder: (BuildContext context) =>
+            const Icon(CupertinoIcons.xmark),
+      ),
 
       appBarTheme: AppBarTheme(
         backgroundColor: isDark

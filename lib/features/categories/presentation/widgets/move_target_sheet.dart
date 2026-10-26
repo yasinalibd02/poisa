@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_sizes.dart';
@@ -120,7 +121,7 @@ class _MoveTargetSheetState extends State<_MoveTargetSheet> {
                     ),
                     trailing: selected
                         ? Icon(
-                            Icons.check_circle_rounded,
+                            CupertinoIcons.checkmark_circle_fill,
                             color: context.colors.primary,
                           )
                         : null,

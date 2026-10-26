@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -93,7 +94,7 @@ class _AccountPickerSheet extends ConsumerWidget {
                   ),
                   trailing: selected
                       ? Icon(
-                          Icons.check_circle_rounded,
+                          CupertinoIcons.checkmark_circle_fill,
                           color: context.colors.primary,
                         )
                       : null,

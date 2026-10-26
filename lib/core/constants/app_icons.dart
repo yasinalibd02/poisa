@@ -1,11 +1,16 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 /// Firestore stores an icon *key* (a stable string), never a code point, so the
 /// icon set can change without a data migration and so Flutter's icon
 /// tree-shaking keeps working. Everything the picker offers lives here.
+///
+/// iOS-style (SF Symbols) glyphs wherever Cupertino has a faithful match; the
+/// rest — food, mosque, piggy bank and similar — stay Material because the
+/// Cupertino set has nothing that reads as the same thing.
 abstract final class AppIcons {
   /// Shown when a stored key is unknown (e.g. removed in a later release).
-  static const IconData fallback = Icons.category_rounded;
+  static const IconData fallback = CupertinoIcons.square_grid_2x2_fill;
 
   /// The full catalogue offered by the icon picker — 75 icons.
   static const Map<String, IconData> catalogue = <String, IconData>{
@@ -17,99 +22,99 @@ abstract final class AppIcons {
     'bakery': Icons.bakery_dining_rounded,
     'icecream': Icons.icecream_rounded,
     'egg': Icons.egg_alt_rounded,
-    'grocery': Icons.local_grocery_store_rounded,
+    'grocery': CupertinoIcons.cart_fill,
 
     // Transport
-    'directions_bus': Icons.directions_bus_rounded,
-    'local_taxi': Icons.local_taxi_rounded,
-    'train': Icons.train_rounded,
+    'directions_bus': CupertinoIcons.bus,
+    'local_taxi': CupertinoIcons.car_detailed,
+    'train': CupertinoIcons.train_style_one,
     'motorcycle': Icons.two_wheeler_rounded,
     'bicycle': Icons.pedal_bike_rounded,
-    'car': Icons.directions_car_rounded,
+    'car': CupertinoIcons.car_fill,
     'fuel': Icons.local_gas_station_rounded,
-    'flight': Icons.flight_rounded,
+    'flight': CupertinoIcons.airplane,
     'boat': Icons.directions_boat_rounded,
     'parking': Icons.local_parking_rounded,
 
     // Shopping
-    'shopping_bag': Icons.shopping_bag_rounded,
-    'shopping_cart': Icons.shopping_cart_rounded,
+    'shopping_bag': CupertinoIcons.bag_fill,
+    'shopping_cart': CupertinoIcons.cart_fill,
     'checkroom': Icons.checkroom_rounded,
     'shoe': Icons.ice_skating_rounded,
     'watch': Icons.watch_rounded,
-    'diamond': Icons.diamond_rounded,
+    'diamond': CupertinoIcons.rhombus_fill,
     'store': Icons.storefront_rounded,
 
     // Home & bills
-    'home': Icons.home_rounded,
-    'apartment': Icons.apartment_rounded,
-    'receipt': Icons.receipt_long_rounded,
-    'bolt': Icons.bolt_rounded,
-    'water_drop': Icons.water_drop_rounded,
-    'gas': Icons.local_fire_department_rounded,
-    'wifi': Icons.wifi_rounded,
-    'phone': Icons.smartphone_rounded,
-    'tv': Icons.tv_rounded,
+    'home': CupertinoIcons.house_fill,
+    'apartment': CupertinoIcons.building_2_fill,
+    'receipt': CupertinoIcons.doc_text_fill,
+    'bolt': CupertinoIcons.bolt_fill,
+    'water_drop': CupertinoIcons.drop_fill,
+    'gas': CupertinoIcons.flame_fill,
+    'wifi': CupertinoIcons.wifi,
+    'phone': CupertinoIcons.phone_fill,
+    'tv': CupertinoIcons.tv_fill,
     'cleaning': Icons.cleaning_services_rounded,
-    'build': Icons.build_rounded,
+    'build': CupertinoIcons.wrench_fill,
     'chair': Icons.chair_rounded,
 
     // Health
-    'health': Icons.favorite_rounded,
-    'medication': Icons.medication_rounded,
-    'hospital': Icons.local_hospital_rounded,
+    'health': CupertinoIcons.heart_fill,
+    'medication': CupertinoIcons.capsule_fill,
+    'hospital': CupertinoIcons.bandage_fill,
     'fitness': Icons.fitness_center_rounded,
     'spa': Icons.spa_rounded,
     'dentist': Icons.masks_rounded,
 
     // Education
     'school': Icons.school_rounded,
-    'book': Icons.menu_book_rounded,
-    'science': Icons.science_rounded,
-    'laptop': Icons.laptop_mac_rounded,
-    'edit_note': Icons.edit_note_rounded,
+    'book': CupertinoIcons.book_fill,
+    'science': CupertinoIcons.lab_flask_solid,
+    'laptop': CupertinoIcons.device_laptop,
+    'edit_note': CupertinoIcons.square_pencil_fill,
 
     // Entertainment
-    'movie': Icons.movie_rounded,
-    'music': Icons.music_note_rounded,
-    'sports': Icons.sports_soccer_rounded,
-    'games': Icons.sports_esports_rounded,
-    'travel': Icons.beach_access_rounded,
-    'park': Icons.park_rounded,
-    'camera': Icons.photo_camera_rounded,
-    'celebration': Icons.celebration_rounded,
+    'movie': CupertinoIcons.film_fill,
+    'music': CupertinoIcons.music_note_2,
+    'sports': CupertinoIcons.sportscourt_fill,
+    'games': CupertinoIcons.gamecontroller_fill,
+    'travel': CupertinoIcons.sun_max_fill,
+    'park': CupertinoIcons.tree,
+    'camera': CupertinoIcons.camera_fill,
+    'celebration': CupertinoIcons.sparkles,
 
     // People
-    'family': Icons.family_restroom_rounded,
+    'family': CupertinoIcons.person_3_fill,
     'child': Icons.child_care_rounded,
-    'pets': Icons.pets_rounded,
-    'gift': Icons.card_giftcard_rounded,
-    'volunteer': Icons.volunteer_activism_rounded,
+    'pets': CupertinoIcons.paw_solid,
+    'gift': CupertinoIcons.gift_fill,
+    'volunteer': CupertinoIcons.hand_raised_fill,
     'mosque': Icons.mosque_rounded,
 
     // Income & finance
     'salary': Icons.payments_rounded,
-    'business': Icons.business_center_rounded,
-    'freelance': Icons.handyman_rounded,
-    'bonus': Icons.emoji_events_rounded,
-    'investment': Icons.trending_up_rounded,
+    'business': CupertinoIcons.briefcase_fill,
+    'freelance': CupertinoIcons.hammer_fill,
+    'bonus': CupertinoIcons.rosette,
+    'investment': CupertinoIcons.graph_square_fill,
     'savings': Icons.savings_rounded,
-    'interest': Icons.percent_rounded,
-    'refund': Icons.replay_rounded,
-    'sell': Icons.sell_rounded,
+    'interest': CupertinoIcons.percent,
+    'refund': CupertinoIcons.arrow_counterclockwise,
+    'sell': CupertinoIcons.tag_fill,
 
     // Lending
-    'handshake': Icons.handshake_rounded,
-    'loan_given': Icons.call_made_rounded,
-    'loan_taken': Icons.call_received_rounded,
+    'handshake': CupertinoIcons.arrow_right_arrow_left_circle_fill,
+    'loan_given': CupertinoIcons.arrow_up_right,
+    'loan_taken': CupertinoIcons.arrow_down_left,
 
     // Wallets & misc
     'cash': Icons.account_balance_wallet_rounded,
     'bank': Icons.account_balance_rounded,
-    'card': Icons.credit_card_rounded,
-    'mobile_wallet': Icons.phone_android_rounded,
-    'category': Icons.category_rounded,
-    'more': Icons.more_horiz_rounded,
+    'card': CupertinoIcons.creditcard_fill,
+    'mobile_wallet': CupertinoIcons.device_phone_portrait,
+    'category': CupertinoIcons.square_grid_2x2_fill,
+    'more': CupertinoIcons.ellipsis,
   };
 
   /// Ordered keys, for the picker grid.

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
@@ -120,7 +121,7 @@ class _Swatch extends StatelessWidget {
           ),
         ),
         child: selected
-            ? const Icon(Icons.check_rounded, size: 18, color: Colors.white)
+            ? const Icon(CupertinoIcons.checkmark, size: 18, color: Colors.white)
             : null,
       ),
     );

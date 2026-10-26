@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -109,7 +110,7 @@ class _ReportsBody extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: AppSizes.xxl),
             child: EmptyStateView(
-              icon: Icons.insights_rounded,
+              icon: CupertinoIcons.chart_bar_alt_fill,
               title: context.l10n.noDataForPeriod,
               message: context.l10n.noDataForPeriodBody,
               compact: true,

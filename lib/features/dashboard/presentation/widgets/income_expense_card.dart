@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -184,7 +185,7 @@ class _PeriodDropdown extends StatelessWidget {
           children: <Widget>[
             Text(label, style: context.texts.labelMedium),
             Icon(
-              Icons.keyboard_arrow_down_rounded,
+              CupertinoIcons.chevron_down,
               size: 18,
               color: context.colors.onSurfaceVariant,
             ),

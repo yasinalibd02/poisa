@@ -925,4 +925,41 @@ class AppL10nEn extends AppL10n {
   String exportPdfPage(String current, String total) {
     return 'Page $current of $total';
   }
+
+  @override
+  String get dailyReminder => 'Daily reminder';
+
+  @override
+  String get dailyReminderBody => 'A nudge to log the day\'s spending';
+
+  @override
+  String get reminderTime => 'Reminder time';
+
+  @override
+  String get reminderNotificationTitle => 'Logged today\'s spending?';
+
+  @override
+  String get reminderNotificationBody =>
+      'Add everything you spent today before you forget.';
+
+  @override
+  String get reminderPermissionDenied =>
+      'Notifications are off for Poisa. Turn them on in system settings.';
+
+  @override
+  String get widgetTodaySpent => 'Spent today';
+
+  @override
+  String get widgetThisMonth => 'This month';
+
+  @override
+  String get displayOverlay => 'Display Overlay';
+
+  @override
+  String get displayOverlayBody =>
+      'A floating bubble over other apps for quick expense entry';
+
+  @override
+  String get displayOverlayPermissionDenied =>
+      'Overlay permission is required. Turn it on in system settings.';
 }

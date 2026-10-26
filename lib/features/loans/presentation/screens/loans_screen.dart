@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -33,12 +34,12 @@ class LoansScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(context.l10n.loans)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push(AppRoutes.transactionNew),
-        icon: const Icon(Icons.add_rounded),
+        icon: const Icon(CupertinoIcons.add),
         label: Text(context.l10n.addTransaction),
       ),
       body: ledger.isEmpty
           ? EmptyStateView(
-              icon: Icons.handshake_rounded,
+              icon: CupertinoIcons.arrow_right_arrow_left_circle,
               title: context.l10n.noLoansTitle,
               message: context.l10n.noLoansBody,
               actionLabel: context.l10n.addTransaction,
@@ -137,7 +138,7 @@ class _PositionCard extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: _Position(
-                  icon: Icons.call_received_rounded,
+                  icon: CupertinoIcons.arrow_down_left,
                   label: context.l10n.loansReceivable,
                   value: money.format(ledger.receivable),
                   color: AppColors.income,
@@ -151,7 +152,7 @@ class _PositionCard extends StatelessWidget {
               ),
               Expanded(
                 child: _Position(
-                  icon: Icons.call_made_rounded,
+                  icon: CupertinoIcons.arrow_up_right,
                   label: context.l10n.loansPayable,
                   value: money.format(ledger.payable),
                   color: AppColors.expense,

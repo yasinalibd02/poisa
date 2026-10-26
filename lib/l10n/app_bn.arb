@@ -277,5 +277,16 @@
   "exportPdfTotalExpense": "মোট খরচ",
   "exportPdfNet": "নিট",
   "exportPdfCount": "{count}টি লেনদেন",
-  "exportPdfPage": "পৃষ্ঠা {current} / {total}"
+  "exportPdfPage": "পৃষ্ঠা {current} / {total}",
+  "dailyReminder": "দৈনিক রিমাইন্ডার",
+  "dailyReminderBody": "দিনের খরচ লিখে রাখার কথা মনে করিয়ে দেবে",
+  "reminderTime": "রিমাইন্ডারের সময়",
+  "reminderNotificationTitle": "আজকের হিসাব লিখেছেন?",
+  "reminderNotificationBody": "আজ যত খরচ হয়েছে, ভুলে যাওয়ার আগেই যোগ করে ফেলুন।",
+  "reminderPermissionDenied": "Poisa-র নোটিফিকেশন বন্ধ আছে। সিস্টেম সেটিংস থেকে চালু করুন।",
+  "widgetTodaySpent": "আজকের খরচ",
+  "widgetThisMonth": "এই মাসে",
+  "displayOverlay": "ডিসপ্লে ওভারলে (ফ্লোটিং বাবল)",
+  "displayOverlayBody": "অন্য অ্যাপের ওপর দ্রুত খরচ বা আয় লেখার ফ্লোটিং বাবল",
+  "displayOverlayPermissionDenied": "ডিসপ্লে ওভারলে পারমিশন প্রয়োজন। সিস্টেম সেটিংস থেকে চালু করুন।"
 }

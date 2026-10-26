@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -194,7 +195,7 @@ class _AccountEditorSheetState extends ConsumerState<_AccountEditorSheet> {
                       ),
                       decoration: InputDecoration(
                         labelText: context.l10n.openingBalance,
-                        prefixIcon: const Icon(Icons.savings_outlined),
+                        prefixIcon: const Icon(CupertinoIcons.money_dollar_circle),
                       ),
                     ),
                     AppSizes.gapXl,

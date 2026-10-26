@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -226,7 +227,7 @@ class _BudgetEditorSheetState extends ConsumerState<_BudgetEditorSheet> {
                               style: context.texts.titleSmall,
                             ),
                           ),
-                          const Icon(Icons.chevron_right_rounded),
+                          const Icon(CupertinoIcons.chevron_right),
                         ],
                       ),
                     ),
@@ -243,7 +244,7 @@ class _BudgetEditorSheetState extends ConsumerState<_BudgetEditorSheet> {
                 decoration: InputDecoration(
                   labelText: context.l10n.budgetLimit,
                   errorText: _errorText,
-                  prefixIcon: const Icon(Icons.flag_outlined),
+                  prefixIcon: const Icon(CupertinoIcons.flag),
                 ),
                 onChanged: (_) {
                   if (_errorText != null) setState(() => _errorText = null);

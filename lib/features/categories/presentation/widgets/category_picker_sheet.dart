@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -68,7 +69,7 @@ class _CategoryPickerSheet extends ConsumerWidget {
                       Navigator.of(context).pop();
                       context.push(AppRoutes.categories);
                     },
-                    icon: const Icon(Icons.tune_rounded, size: 18),
+                    icon: const Icon(CupertinoIcons.slider_horizontal_3, size: 18),
                     label: Text(context.l10n.actionEdit),
                   ),
                 ],

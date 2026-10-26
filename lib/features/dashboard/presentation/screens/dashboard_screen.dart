@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -79,7 +80,7 @@ class _DashboardBody extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: AppSizes.xl),
                 child: EmptyStateView(
-                  icon: Icons.receipt_long_rounded,
+                  icon: CupertinoIcons.doc_text_fill,
                   title: context.l10n.noTransactionsTitle,
                   message: context.l10n.noTransactionsBody,
                   actionLabel: context.l10n.addTransaction,

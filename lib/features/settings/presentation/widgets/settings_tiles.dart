@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart'
+    show CupertinoDatePicker, CupertinoDatePickerMode, CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_sizes.dart';
@@ -90,7 +92,7 @@ class SettingsTile extends StatelessWidget {
               ? (onTap == null
                     ? null
                     : Icon(
-                        Icons.chevron_right_rounded,
+                        CupertinoIcons.chevron_right,
                         color: context.colors.onSurfaceVariant,
                       ))
               : Row(
@@ -111,7 +113,7 @@ class SettingsTile extends StatelessWidget {
                       ),
                     ),
                     Icon(
-                      Icons.chevron_right_rounded,
+                      CupertinoIcons.chevron_right,
                       color: context.colors.onSurfaceVariant,
                     ),
                   ],
@@ -227,7 +229,7 @@ class _ChoiceSheetState<T> extends State<_ChoiceSheet<T>> {
                   onChanged: (String value) => setState(() => _query = value),
                   decoration: InputDecoration(
                     hintText: widget.searchHint,
-                    prefixIcon: const Icon(Icons.search_rounded),
+                    prefixIcon: const Icon(CupertinoIcons.search),
                     isDense: true,
                   ),
                 ),
@@ -248,7 +250,7 @@ class _ChoiceSheetState<T> extends State<_ChoiceSheet<T>> {
                         : Text(option.subtitle!),
                     trailing: isSelected
                         ? Icon(
-                            Icons.check_circle_rounded,
+                            CupertinoIcons.checkmark_circle_fill,
                             color: context.colors.primary,
                           )
                         : null,
@@ -262,4 +264,53 @@ class _ChoiceSheetState<T> extends State<_ChoiceSheet<T>> {
       },
     );
   }
+}
+
+/// iOS-style wheel for picking a time of day. Returns null when dismissed.
+Future<TimeOfDay?> showTimeWheelSheet(
+  BuildContext context, {
+  required String title,
+  required TimeOfDay initial,
+}) {
+  TimeOfDay picked = initial;
+  return showModalBottomSheet<TimeOfDay>(
+    context: context,
+    builder: (BuildContext context) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          AppSizes.lg,
+          AppSizes.sm,
+          AppSizes.lg,
+          AppSizes.lg,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Text(title, style: context.texts.titleMedium),
+            SizedBox(
+              height: 200,
+              child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.time,
+                initialDateTime: DateTime(
+                  2000,
+                  1,
+                  1,
+                  initial.hour,
+                  initial.minute,
+                ),
+                onDateTimeChanged: (DateTime value) =>
+                    picked = TimeOfDay.fromDateTime(value),
+              ),
+            ),
+            AppSizes.gapMd,
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(picked),
+              child: Text(context.l10n.actionDone),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

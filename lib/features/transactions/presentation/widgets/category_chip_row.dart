@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -41,7 +42,7 @@ class CategoryChipRow extends ConsumerWidget {
         alignment: AlignmentDirectional.centerStart,
         child: TextButton.icon(
           onPressed: onMore,
-          icon: const Icon(Icons.add_rounded),
+          icon: const Icon(CupertinoIcons.add),
           label: Text(context.l10n.newCategory),
         ),
       );

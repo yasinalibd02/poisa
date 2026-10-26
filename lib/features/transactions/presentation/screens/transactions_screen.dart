@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -108,7 +109,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
           icon: Badge(
             isLabelVisible: activeFilters > 0,
             label: Text(money.number(activeFilters)),
-            child: const Icon(Icons.filter_list_rounded),
+            child: const Icon(CupertinoIcons.line_horizontal_3_decrease),
           ),
         ),
         AppSizes.hGapXs,
@@ -128,7 +129,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
             textInputAction: TextInputAction.search,
             decoration: InputDecoration(
               hintText: context.l10n.searchHint,
-              prefixIcon: const Icon(Icons.search_rounded),
+              prefixIcon: const Icon(CupertinoIcons.search),
               isDense: true,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: AppSizes.lg,
@@ -137,7 +138,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               suffixIcon: _searchController.text.isEmpty
                   ? null
                   : IconButton(
-                      icon: const Icon(Icons.close_rounded, size: 18),
+                      icon: const Icon(CupertinoIcons.xmark, size: 18),
                       onPressed: () {
                         _searchController.clear();
                         ref
@@ -159,14 +160,14 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   ) {
     return AppBar(
       leading: IconButton(
-        icon: const Icon(Icons.close_rounded),
+        icon: const Icon(CupertinoIcons.xmark),
         onPressed: ref.read(transactionSelectionProvider.notifier).clear,
       ),
       title: Text(context.l10n.selectedCount(selection.length)),
       actions: <Widget>[
         IconButton(
           tooltip: context.l10n.actionDelete,
-          icon: Icon(Icons.delete_outline_rounded, color: context.colors.error),
+          icon: Icon(CupertinoIcons.trash, color: context.colors.error),
           onPressed: () => _deleteSelected(selection),
         ),
         AppSizes.hGapXs,
@@ -187,14 +188,14 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     if (groups.isEmpty) {
       return filtersActive
           ? EmptyStateView(
-              icon: Icons.search_off_rounded,
+              icon: CupertinoIcons.doc_text_search,
               title: context.l10n.noResultsTitle,
               message: context.l10n.noResultsBody,
               actionLabel: context.l10n.actionReset,
               onAction: ref.read(transactionFiltersProvider.notifier).clearAll,
             )
           : EmptyStateView(
-              icon: Icons.receipt_long_rounded,
+              icon: CupertinoIcons.doc_text_fill,
               title: context.l10n.noTransactionsTitle,
               message: context.l10n.noTransactionsBody,
               actionLabel: context.l10n.addTransaction,

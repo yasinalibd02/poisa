@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/constants/app_sizes.dart';
 import '../core/extensions/context_x.dart';
+import '../core/services/launch_actions.dart';
 import '../core/widgets/state_views.dart';
 import '../features/auth/presentation/providers/user_providers.dart';
 import 'routes.dart';
@@ -46,7 +48,7 @@ class AppShell extends ConsumerWidget {
           error: error,
           onRetry: () => ref.invalidate(userBootstrapProvider),
         ),
-        data: (_) => child,
+        data: (_) => _LaunchActionListener(child: child),
       ),
       floatingActionButton: Hero(
         tag: addTransactionHeroTag,
@@ -58,7 +60,7 @@ class AppShell extends ConsumerWidget {
           onPressed: () => context.push(AppRoutes.transactionNew),
           tooltip: context.l10n.addTransaction,
           shape: const CircleBorder(),
-          child: const Icon(Icons.add_rounded, size: 28),
+          child: const Icon(CupertinoIcons.add, size: 28),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -73,6 +75,43 @@ class AppShell extends ConsumerWidget {
     final int index = _destinations.indexWhere(location.startsWith);
     return index < 0 ? 0 : index;
   }
+}
+
+/// Opens the transaction editor for a request parked in [LaunchActions] by a
+/// reminder tap or a home-screen widget button. Mounted only once bootstrap
+/// has finished, so the editor always has categories and accounts to offer.
+class _LaunchActionListener extends StatefulWidget {
+  const _LaunchActionListener({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_LaunchActionListener> createState() => _LaunchActionListenerState();
+}
+
+class _LaunchActionListenerState extends State<_LaunchActionListener> {
+  @override
+  void initState() {
+    super.initState();
+    LaunchActions.pendingTransactionType.addListener(_consume);
+    // A cold-start request was parked before this widget existed.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _consume());
+  }
+
+  @override
+  void dispose() {
+    LaunchActions.pendingTransactionType.removeListener(_consume);
+    super.dispose();
+  }
+
+  void _consume() {
+    if (!mounted || LaunchActions.pendingTransactionType.value == null) return;
+    final String? type = LaunchActions.take();
+    context.push(AppRoutes.transactionNew, extra: type);
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 class _KoriNavBar extends StatelessWidget {
@@ -97,15 +136,15 @@ class _KoriNavBar extends StatelessWidget {
           child: Row(
             children: <Widget>[
               _NavItem(
-                icon: Icons.home_outlined,
-                activeIcon: Icons.home_rounded,
+                icon: CupertinoIcons.house,
+                activeIcon: CupertinoIcons.house_fill,
                 label: context.l10n.home,
                 selected: currentIndex == 0,
                 onTap: () => onSelect(0),
               ),
               _NavItem(
-                icon: Icons.receipt_long_outlined,
-                activeIcon: Icons.receipt_long_rounded,
+                icon: CupertinoIcons.doc_text,
+                activeIcon: CupertinoIcons.doc_text_fill,
                 label: context.l10n.transactions,
                 selected: currentIndex == 1,
                 onTap: () => onSelect(1),
@@ -113,15 +152,15 @@ class _KoriNavBar extends StatelessWidget {
               // Space reserved for the docked FAB.
               const SizedBox(width: 72),
               _NavItem(
-                icon: Icons.pie_chart_outline_rounded,
-                activeIcon: Icons.pie_chart_rounded,
+                icon: CupertinoIcons.chart_pie,
+                activeIcon: CupertinoIcons.chart_pie_fill,
                 label: context.l10n.reports,
                 selected: currentIndex == 2,
                 onTap: () => onSelect(2),
               ),
               _NavItem(
-                icon: Icons.person_outline_rounded,
-                activeIcon: Icons.person_rounded,
+                icon: CupertinoIcons.person,
+                activeIcon: CupertinoIcons.person_fill,
                 label: context.l10n.profile,
                 selected: currentIndex == 3,
                 onTap: () => onSelect(3),

@@ -46,6 +46,15 @@
 				<string>com.googleusercontent.apps.495721871472-o012hs1cum4vjr39c7dd91kv0c4201us</string>
 			</array>
 		</dict>
+		<!-- Home-screen widget buttons open poisa://add/<type>?homeWidget -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>poisa</string>
+			</array>
+		</dict>
 	</array>
 	<!-- url_launcher needs to know which schemes it may open. -->
 	<key>LSApplicationQueriesSchemes</key>

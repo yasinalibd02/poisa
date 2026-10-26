@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +9,7 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/currencies.dart';
 import '../../../../core/extensions/context_x.dart';
 import '../../../../core/services/link_service.dart';
+import '../../../../core/services/overlay_service.dart';
 import '../../../../core/services/pdf_export_service.dart';
 import '../../../../core/utils/app_failure.dart';
 import '../../../../core/utils/money_formatter.dart';
@@ -59,14 +61,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             title: context.l10n.preferences,
             children: <Widget>[
               SettingsTile(
-                icon: Icons.translate_rounded,
+                icon: CupertinoIcons.globe,
                 label: context.l10n.language,
                 value: settings.isBangla ? 'বাংলা' : 'English',
                 onTap: _pickLanguage,
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.pin_rounded,
+                icon: CupertinoIcons.textformat_123,
                 label: context.l10n.banglaNumerals,
                 description: context.l10n.banglaNumeralsBody,
                 trailing: Switch.adaptive(
@@ -78,14 +80,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.brightness_6_rounded,
+                icon: CupertinoIcons.circle_lefthalf_fill,
                 label: context.l10n.theme,
                 value: _themeLabel(settings.themeMode),
                 onTap: _pickTheme,
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.payments_rounded,
+                icon: CupertinoIcons.money_dollar_circle,
                 label: context.l10n.currency,
                 value:
                     '${settings.currencySymbol}  ${settings.currencyCode}',
@@ -93,14 +95,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.calendar_view_week_rounded,
+                icon: CupertinoIcons.calendar,
                 label: context.l10n.firstDayOfWeek,
                 value: _weekdayLabel(settings.firstDayOfWeek),
                 onTap: _pickFirstDayOfWeek,
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.event_repeat_rounded,
+                icon: CupertinoIcons.calendar_today,
                 label: context.l10n.firstDayOfMonth,
                 description: context.l10n.firstDayOfMonthBody,
                 value: context.l10n.dayOfMonth(settings.firstDayOfMonth),
@@ -110,35 +112,75 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
 
           SettingsSection(
+            title: context.l10n.dailyReminder,
+            children: <Widget>[
+              SettingsTile(
+                icon: CupertinoIcons.bell,
+                label: context.l10n.dailyReminder,
+                description: context.l10n.dailyReminderBody,
+                trailing: Switch.adaptive(
+                  value: settings.reminderEnabled,
+                  onChanged: _toggleReminder,
+                ),
+              ),
+              if (settings.reminderEnabled) ...<Widget>[
+                const SettingsDivider(),
+                SettingsTile(
+                  icon: CupertinoIcons.clock,
+                  label: context.l10n.reminderTime,
+                  value: _timeLabel(settings.reminderTime),
+                  onTap: _pickReminderTime,
+                ),
+              ],
+            ],
+          ),
+
+          if (OverlayService.isSupported)
+            SettingsSection(
+              title: context.l10n.displayOverlay,
+              children: <Widget>[
+                SettingsTile(
+                  icon: CupertinoIcons.app_badge,
+                  label: context.l10n.displayOverlay,
+                  description: context.l10n.displayOverlayBody,
+                  trailing: Switch.adaptive(
+                    value: settings.overlayEnabled,
+                    onChanged: _toggleOverlay,
+                  ),
+                ),
+              ],
+            ),
+
+          SettingsSection(
             title: context.l10n.dataAndPrivacy,
             children: <Widget>[
               SettingsTile(
-                icon: Icons.category_rounded,
+                icon: CupertinoIcons.square_grid_2x2_fill,
                 label: context.l10n.manageCategories,
                 onTap: () => context.push(AppRoutes.categories),
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.account_balance_wallet_rounded,
+                icon: CupertinoIcons.creditcard_fill,
                 label: context.l10n.manageAccounts,
                 onTap: () => context.push(AppRoutes.accounts),
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.flag_rounded,
+                icon: CupertinoIcons.flag_fill,
                 label: context.l10n.budgets,
                 onTap: () => context.push(AppRoutes.budget),
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.handshake_rounded,
+                icon: CupertinoIcons.arrow_right_arrow_left_circle,
                 label: context.l10n.loans,
                 description: context.l10n.loansSubtitle,
                 onTap: () => context.push(AppRoutes.loans),
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.download_rounded,
+                icon: CupertinoIcons.tray_arrow_down,
                 label: context.l10n.exportData,
                 description: context.l10n.exportDataBody,
                 onTap: _busy ? null : _export,
@@ -157,20 +199,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             title: context.l10n.about,
             children: <Widget>[
               SettingsTile(
-                icon: Icons.info_outline_rounded,
+                icon: CupertinoIcons.info_circle,
                 label: context.l10n.about,
                 description: context.l10n.aboutBody,
                 value: context.l10n.version(AppConfig.appVersion),
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.privacy_tip_outlined,
+                icon: CupertinoIcons.lock_shield,
                 label: context.l10n.privacyPolicy,
                 onTap: () => LinkService.open(AppConfig.privacyPolicyUrl),
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.star_outline_rounded,
+                icon: CupertinoIcons.star,
                 label: context.l10n.rateApp,
                 onTap: () => LinkService.open(
                   LinkService.storeUrl(
@@ -181,7 +223,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SettingsDivider(),
               SettingsTile(
-                icon: Icons.ios_share_rounded,
+                icon: CupertinoIcons.share,
                 label: context.l10n.shareApp,
                 onTap: _shareApp,
               ),
@@ -194,7 +236,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             children: isGuest
                 ? <Widget>[
                     SettingsTile(
-                      icon: Icons.logout_rounded,
+                      icon: CupertinoIcons.square_arrow_right,
                       label: context.l10n.guestExit,
                       description: context.l10n.guestModeCaption,
                       destructive: true,
@@ -203,13 +245,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ]
                 : <Widget>[
                     SettingsTile(
-                      icon: Icons.logout_rounded,
+                      icon: CupertinoIcons.square_arrow_right,
                       label: context.l10n.signOut,
                       onTap: _signOut,
                     ),
                     const SettingsDivider(),
                     SettingsTile(
-                      icon: Icons.delete_forever_rounded,
+                      icon: CupertinoIcons.trash_fill,
                       label: context.l10n.deleteAccountAndData,
                       destructive: true,
                       onTap: _busy ? null : _deleteAccount,
@@ -232,6 +274,42 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     DateTime.sunday => context.l10n.sunday,
     _ => context.l10n.monday,
   };
+
+  String _timeLabel(TimeOfDay time) {
+    final DateTime asDate = DateTime(2000, 1, 1, time.hour, time.minute);
+    return ref
+        .read(moneyFormatterProvider)
+        .localizeDigits(ref.read(dateLabelsProvider).time(asDate));
+  }
+
+  Future<void> _toggleReminder(bool value) async {
+    final bool applied = await ref
+        .read(settingsProvider.notifier)
+        .setReminderEnabled(value);
+    if (!applied && mounted) {
+      AppSnack.error(context, context.l10n.reminderPermissionDenied);
+    }
+  }
+
+  Future<void> _toggleOverlay(bool value) async {
+    final bool applied = await ref
+        .read(settingsProvider.notifier)
+        .setOverlayEnabled(value);
+    if (!applied && mounted) {
+      AppSnack.error(context, context.l10n.displayOverlayPermissionDenied);
+    }
+  }
+
+  Future<void> _pickReminderTime() async {
+    final TimeOfDay? time = await showTimeWheelSheet(
+      context,
+      title: context.l10n.reminderTime,
+      initial: ref.read(settingsProvider).reminderTime,
+    );
+    if (time != null) {
+      await ref.read(settingsProvider.notifier).setReminderTime(time);
+    }
+  }
 
   Future<void> _pickLanguage() async {
     final String? code = await showChoiceSheet<String>(
@@ -520,7 +598,7 @@ class _ProfileHeader extends StatelessWidget {
                 ? NetworkImage(photo)
                 : null,
             child: isGuest
-                ? Icon(Icons.person_outline_rounded, color: context.colors.primary)
+                ? Icon(CupertinoIcons.person, color: context.colors.primary)
                 : Text(
                     user?.initials ?? '',
                     style: context.texts.titleMedium?.copyWith(

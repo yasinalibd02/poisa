@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_sizes.dart';
@@ -49,7 +50,7 @@ class LanguageChoiceCard extends StatelessWidget {
                 duration: AppSizes.fast,
                 scale: selected ? 1 : 0,
                 child: Icon(
-                  Icons.check_circle_rounded,
+                  CupertinoIcons.checkmark_circle_fill,
                   color: colors.primary,
                   size: 22,
                 ),

@@ -1,11 +1,14 @@
 package com.kori.moneytracker
 
 import android.content.ContentValues
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
@@ -23,6 +26,14 @@ class MainActivity : FlutterActivity() {
 
     private companion object {
         const val CHANNEL = "com.kori.moneytracker/downloads"
+        const val OVERLAY_CHANNEL = "com.kori.moneytracker/overlay"
+
+        // flutter_overlay_window caches the bubble's engine under this tag.
+        const val OVERLAY_ENGINE_TAG = "myCachedEngine"
+
+        // home_widget's launch action: tagging the intent with it lets
+        // HomeWidgetService route bubble taps exactly like widget taps.
+        const val HOME_WIDGET_LAUNCH_ACTION = "es.antonborri.home_widget.action.LAUNCH"
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -48,6 +59,45 @@ class MainActivity : FlutterActivity() {
                     result.success(saveToDownloads(fileName, mimeType, bytes))
                 } catch (error: Exception) {
                     result.error("save_failed", error.message, null)
+                }
+            }
+
+        registerOverlayChannel()
+    }
+
+    /**
+     * The floating bubble runs in its own engine inside a Service, with no
+     * Activity to launch from, so url_launcher cannot open the app from it.
+     * This hands it a channel that starts MainActivity directly — allowed from
+     * the background because the app holds "display over other apps".
+     * The overlay plugin creates that engine when it attaches to this
+     * Activity, which happens before configureFlutterEngine runs.
+     */
+    private fun registerOverlayChannel() {
+        val overlayEngine = FlutterEngineCache.getInstance().get(OVERLAY_ENGINE_TAG) ?: return
+        val appContext = applicationContext
+
+        MethodChannel(overlayEngine.dartExecutor.binaryMessenger, OVERLAY_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method != "openApp") {
+                    result.notImplemented()
+                    return@setMethodCallHandler
+                }
+
+                val intent = Intent(appContext, MainActivity::class.java).apply {
+                    action = HOME_WIDGET_LAUNCH_ACTION
+                    call.argument<String>("uri")?.let { data = Uri.parse(it) }
+                    addFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK or
+                            Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                            Intent.FLAG_ACTIVITY_REORDER_TO_FRONT,
+                    )
+                }
+                try {
+                    appContext.startActivity(intent)
+                    result.success(true)
+                } catch (error: Exception) {
+                    result.error("launch_failed", error.message, null)
                 }
             }
     }

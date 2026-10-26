@@ -15,6 +15,9 @@ class PreferencesService {
   static const String _kBanglaNumerals = 'use_bangla_numerals';
   static const String _kFirstDayOfWeek = 'first_day_of_week';
   static const String _kFirstDayOfMonth = 'first_day_of_month';
+  static const String _kReminderEnabled = 'reminder_enabled';
+  static const String _kReminderMinutes = 'reminder_minutes';
+  static const String _kOverlayEnabled = 'overlay_enabled';
 
   bool get onboardingDone => _prefs.getBool(_kOnboardingDone) ?? false;
   Future<void> setOnboardingDone(bool value) =>
@@ -42,6 +45,21 @@ class PreferencesService {
   int? get firstDayOfMonth => _prefs.getInt(_kFirstDayOfMonth);
   Future<void> setFirstDayOfMonth(int value) =>
       _prefs.setInt(_kFirstDayOfMonth, value);
+
+  /// Null until the user first touches the reminder switch — see
+  /// `SettingsController._syncReminder` for why that distinction matters.
+  bool? get reminderEnabled => _prefs.getBool(_kReminderEnabled);
+  Future<void> setReminderEnabled(bool value) =>
+      _prefs.setBool(_kReminderEnabled, value);
+
+  /// Minutes after local midnight.
+  int? get reminderMinutes => _prefs.getInt(_kReminderMinutes);
+  Future<void> setReminderMinutes(int value) =>
+      _prefs.setInt(_kReminderMinutes, value);
+
+  bool get overlayEnabled => _prefs.getBool(_kOverlayEnabled) ?? false;
+  Future<void> setOverlayEnabled(bool value) =>
+      _prefs.setBool(_kOverlayEnabled, value);
 
   /// Clears everything except the onboarding flag — used when the user deletes
   /// their account but stays on the device.

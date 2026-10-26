@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,14 +38,14 @@ class BudgetScreen extends ConsumerWidget {
           IconButton(
             tooltip: context.l10n.copyLastMonth,
             onPressed: () => _copyLastMonth(context, ref),
-            icon: const Icon(Icons.content_copy_rounded),
+            icon: const Icon(CupertinoIcons.doc_on_doc),
           ),
           AppSizes.hGapXs,
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showBudgetEditor(context),
-        icon: const Icon(Icons.add_rounded),
+        icon: const Icon(CupertinoIcons.add),
         label: Text(context.l10n.newBudget),
       ),
       body: Column(
@@ -61,7 +62,7 @@ class BudgetScreen extends ConsumerWidget {
               ),
               data: (_) => progress.isEmpty
                   ? EmptyStateView(
-                      icon: Icons.flag_rounded,
+                      icon: CupertinoIcons.flag_fill,
                       title: context.l10n.noBudgetsTitle,
                       message: context.l10n.noBudgetsBody,
                       actionLabel: context.l10n.newBudget,
@@ -171,7 +172,7 @@ class _BudgetCard extends ConsumerWidget {
                 tooltip: context.l10n.actionDelete,
                 onPressed: () => _confirmDelete(context, ref),
                 icon: Icon(
-                  Icons.delete_outline_rounded,
+                  CupertinoIcons.trash,
                   color: context.colors.onSurfaceVariant,
                 ),
               ),

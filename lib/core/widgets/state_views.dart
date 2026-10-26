@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../constants/app_sizes.dart';
@@ -107,8 +108,8 @@ class ErrorStateView extends StatelessWidget {
           children: <Widget>[
             _EmptyIllustration(
               icon: failure.kind == FailureKind.network
-                  ? Icons.cloud_off_rounded
-                  : Icons.error_outline_rounded,
+                  ? CupertinoIcons.wifi_slash
+                  : CupertinoIcons.exclamationmark_circle,
               size: 96,
             ),
             AppSizes.gapXl,
@@ -125,7 +126,7 @@ class ErrorStateView extends StatelessWidget {
               AppSizes.gapXl,
               FilledButton.tonalIcon(
                 onPressed: onRetry,
-                icon: const Icon(Icons.refresh_rounded),
+                icon: const Icon(CupertinoIcons.arrow_clockwise),
                 label: Text(context.l10n.actionRetry),
               ),
             ],

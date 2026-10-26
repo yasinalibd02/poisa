@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/dashboard/presentation/providers/home_widget_sync.dart';
 import '../features/settings/data/app_settings.dart';
 import '../features/settings/presentation/providers/settings_provider.dart';
 import '../l10n/app_localizations.dart';
@@ -18,6 +19,7 @@ class KoriApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppSettings settings = ref.watch(settingsProvider);
     final GoRouter router = ref.watch(routerProvider);
+    ref.watch(homeWidgetSyncProvider);
 
     return MaterialApp.router(
       title: 'Kori',

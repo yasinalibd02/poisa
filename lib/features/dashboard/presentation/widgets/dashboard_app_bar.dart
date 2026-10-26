@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -37,7 +38,7 @@ class DashboardAppBar extends ConsumerWidget {
               ),
             ),
             _RoundIconButton(
-              icon: Icons.notifications_none_rounded,
+              icon: CupertinoIcons.bell,
               tooltip: context.l10n.recentTransactions,
               onTap: () => context.go(AppRoutes.transactions),
             ),
@@ -80,7 +81,7 @@ class _OverflowMenu extends StatelessWidget {
     return PopupMenuButton<String>(
       tooltip: context.l10n.settings,
       icon: Icon(
-        Icons.more_vert_rounded,
+        CupertinoIcons.ellipsis_vertical,
         size: 24,
         color: context.colors.onSurface,
       ),
@@ -89,21 +90,21 @@ class _OverflowMenu extends StatelessWidget {
         PopupMenuItem<String>(
           value: AppRoutes.accounts,
           child: _MenuRow(
-            icon: Icons.account_balance_wallet_outlined,
+            icon: CupertinoIcons.creditcard,
             label: context.l10n.accounts,
           ),
         ),
         PopupMenuItem<String>(
           value: AppRoutes.budget,
           child: _MenuRow(
-            icon: Icons.savings_outlined,
+            icon: CupertinoIcons.money_dollar_circle,
             label: context.l10n.budgets,
           ),
         ),
         PopupMenuItem<String>(
           value: AppRoutes.categories,
           child: _MenuRow(
-            icon: Icons.category_outlined,
+            icon: CupertinoIcons.square_grid_2x2,
             label: context.l10n.categories,
           ),
         ),
@@ -111,7 +112,7 @@ class _OverflowMenu extends StatelessWidget {
         PopupMenuItem<String>(
           value: AppRoutes.settings,
           child: _MenuRow(
-            icon: Icons.settings_outlined,
+            icon: CupertinoIcons.gear,
             label: context.l10n.settings,
           ),
         ),

@@ -440,5 +440,16 @@
               "type": "String"
           }
       }
-  }
+  },
+  "dailyReminder": "Daily reminder",
+  "dailyReminderBody": "A nudge to log the day's spending",
+  "reminderTime": "Reminder time",
+  "reminderNotificationTitle": "Logged today's spending?",
+  "reminderNotificationBody": "Add everything you spent today before you forget.",
+  "reminderPermissionDenied": "Notifications are off for Poisa. Turn them on in system settings.",
+  "widgetTodaySpent": "Spent today",
+  "widgetThisMonth": "This month",
+  "displayOverlay": "Display Overlay",
+  "displayOverlayBody": "A floating bubble over other apps for quick expense entry",
+  "displayOverlayPermissionDenied": "Overlay permission is required. Turn it on in system settings."
 }

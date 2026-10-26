@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_sizes.dart';
@@ -64,7 +65,7 @@ class EditorFieldRow extends StatelessWidget {
                 ),
               ),
               Icon(
-                Icons.chevron_right_rounded,
+                CupertinoIcons.chevron_right,
                 color: context.colors.onSurfaceVariant,
               ),
             ],

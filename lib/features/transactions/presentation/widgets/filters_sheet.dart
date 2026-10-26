@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -142,7 +143,7 @@ class _FiltersSheetState extends ConsumerState<_FiltersSheet> {
                   _Label(context.l10n.dateRange),
                   OutlinedButton.icon(
                     onPressed: _pickRange,
-                    icon: const Icon(Icons.event_rounded, size: 18),
+                    icon: const Icon(CupertinoIcons.calendar, size: 18),
                     label: Text(
                       _draft.range == null
                           ? context.l10n.labelAll

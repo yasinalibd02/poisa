@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -122,7 +123,7 @@ class _IncomeShortcut extends StatelessWidget {
             width: 52,
             height: 52,
             child: Icon(
-              Icons.account_balance_wallet_rounded,
+              CupertinoIcons.creditcard_fill,
               color: Colors.white,
               size: 26,
             ),
@@ -163,8 +164,8 @@ class _TrendPill extends StatelessWidget {
           AppSizes.hGapSm,
           Icon(
             trend.up
-                ? Icons.arrow_outward_rounded
-                : Icons.south_east_rounded,
+                ? CupertinoIcons.arrow_up_right
+                : CupertinoIcons.arrow_down_right,
             size: 15,
             color: Colors.white,
           ),

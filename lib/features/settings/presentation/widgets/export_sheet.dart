@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_sizes.dart';
@@ -16,13 +17,13 @@ Future<ExportFormat?> showExportFormatSheet(BuildContext context) {
     options: <_Option<ExportFormat>>[
       _Option<ExportFormat>(
         value: ExportFormat.csv,
-        icon: Icons.table_chart_rounded,
+        icon: CupertinoIcons.doc_chart,
         label: context.l10n.exportFormatCsv,
         description: context.l10n.exportFormatCsvBody,
       ),
       _Option<ExportFormat>(
         value: ExportFormat.pdf,
-        icon: Icons.picture_as_pdf_rounded,
+        icon: CupertinoIcons.doc_richtext,
         label: context.l10n.exportFormatPdf,
         description: context.l10n.exportFormatPdfBody,
       ),
@@ -37,13 +38,13 @@ Future<ExportDestination?> showExportDestinationSheet(BuildContext context) {
     options: <_Option<ExportDestination>>[
       _Option<ExportDestination>(
         value: ExportDestination.save,
-        icon: Icons.download_rounded,
+        icon: CupertinoIcons.tray_arrow_down,
         label: context.l10n.exportActionSave,
         description: context.l10n.exportActionSaveBody,
       ),
       _Option<ExportDestination>(
         value: ExportDestination.share,
-        icon: Icons.ios_share_rounded,
+        icon: CupertinoIcons.share,
         label: context.l10n.exportActionShare,
         description: context.l10n.exportActionShareBody,
       ),

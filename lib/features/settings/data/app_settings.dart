@@ -14,6 +14,9 @@ class AppSettings {
     required this.firstDayOfWeek,
     required this.firstDayOfMonth,
     required this.onboardingDone,
+    required this.reminderEnabled,
+    required this.reminderTime,
+    required this.overlayEnabled,
   });
 
   /// `en` or `bn`.
@@ -30,6 +33,16 @@ class AppSettings {
 
   final bool onboardingDone;
 
+  /// The local daily "log today's spending" notification. Device-only, so it
+  /// is deliberately left out of [toMap].
+  final bool reminderEnabled;
+  final TimeOfDay reminderTime;
+
+  /// Floating quick-entry bubble (Android only). Device-only.
+  final bool overlayEnabled;
+
+  static const TimeOfDay defaultReminderTime = TimeOfDay(hour: 22, minute: 0);
+
   static const List<String> supportedLanguages = <String>['en', 'bn'];
 
   factory AppSettings.defaults() => const AppSettings(
@@ -40,6 +53,9 @@ class AppSettings {
     firstDayOfWeek: DateTime.monday,
     firstDayOfMonth: 1,
     onboardingDone: false,
+    reminderEnabled: false,
+    reminderTime: defaultReminderTime,
+    overlayEnabled: false,
   );
 
   Locale get locale => Locale(languageCode);
@@ -56,6 +72,9 @@ class AppSettings {
     int? firstDayOfWeek,
     int? firstDayOfMonth,
     bool? onboardingDone,
+    bool? reminderEnabled,
+    TimeOfDay? reminderTime,
+    bool? overlayEnabled,
   }) {
     return AppSettings(
       languageCode: languageCode ?? this.languageCode,
@@ -65,6 +84,9 @@ class AppSettings {
       firstDayOfWeek: firstDayOfWeek ?? this.firstDayOfWeek,
       firstDayOfMonth: firstDayOfMonth ?? this.firstDayOfMonth,
       onboardingDone: onboardingDone ?? this.onboardingDone,
+      reminderEnabled: reminderEnabled ?? this.reminderEnabled,
+      reminderTime: reminderTime ?? this.reminderTime,
+      overlayEnabled: overlayEnabled ?? this.overlayEnabled,
     );
   }
 
@@ -99,7 +121,10 @@ class AppSettings {
       other.useBanglaNumerals == useBanglaNumerals &&
       other.firstDayOfWeek == firstDayOfWeek &&
       other.firstDayOfMonth == firstDayOfMonth &&
-      other.onboardingDone == onboardingDone;
+      other.onboardingDone == onboardingDone &&
+      other.reminderEnabled == reminderEnabled &&
+      other.reminderTime == reminderTime &&
+      other.overlayEnabled == overlayEnabled;
 
   @override
   int get hashCode => Object.hash(
@@ -110,5 +135,8 @@ class AppSettings {
     firstDayOfWeek,
     firstDayOfMonth,
     onboardingDone,
+    reminderEnabled,
+    reminderTime,
+    overlayEnabled,
   );
 }

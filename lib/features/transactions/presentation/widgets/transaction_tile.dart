@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -187,7 +188,7 @@ class _Leading extends StatelessWidget {
             ),
             child: selected
                 ? Icon(
-                    Icons.check_rounded,
+                    CupertinoIcons.checkmark,
                     size: 16,
                     color: context.colors.onPrimary,
                   )

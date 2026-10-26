@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -76,7 +77,7 @@ class _DeleteBackground extends StatelessWidget {
         color: context.colors.error.withValues(alpha: 0.14),
         borderRadius: AppSizes.brMd,
       ),
-      child: Icon(Icons.delete_outline_rounded, color: context.colors.error),
+      child: Icon(CupertinoIcons.trash, color: context.colors.error),
     );
   }
 }
